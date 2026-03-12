@@ -79,18 +79,16 @@ public class Tasks {
 					if (myFleet != null)
 						game.printMyBoard(false, true);
 					break;
-                case RAJADA:
-                    if (game != null) {
-                        System.out.println("Introduza 3 posições de tiro (exemplo: A1 B2 C3):");
-                        in.nextLine();
-                        game.readEnemyFire(in);
-                        myFleet.printStatus();
-                        game.printMyBoard(true, false);
-
-                        if (game.getRemainingShips() == 0) {
-                            game.over();
-                            System.exit(0);
-                        }
+				case RAJADA:
+					if (game != null) {
+						moveTimer.start();
+						game.readEnemyFire(in);
+						moveTimer.stop();
+						myFleet.printStatus();
+						game.printMyBoard(true, false);
+						System.out.printf("Tempo gasto na jogada: %.2f segundos\n", moveTimer.getSeconds());
+						moveTimer.reset();
+						BattleshipGUI.updateBoard();
                     } else {
                         System.out.println("Primeiro deve gerar ou carregar uma frota.");
                     }
