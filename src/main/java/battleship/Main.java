@@ -3,6 +3,7 @@
  */
 package battleship;
 
+
 /**
  * The type Main.
  *

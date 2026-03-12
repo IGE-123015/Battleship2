@@ -40,6 +40,7 @@ public class Tasks {
 
 		IFleet myFleet = null;
 		IGame game = null;
+		Timer moveTimer = new Timer();
 		menuHelp();
 
 		System.out.print("> ");
@@ -68,9 +69,13 @@ public class Tasks {
 					break;
 				case RAJADA:
 					if (game != null) {
+						moveTimer.start();
 						game.readEnemyFire(in);
+						moveTimer.stop();
 						myFleet.printStatus();
 						game.printMyBoard(true, false);
+						System.out.printf("Tempo gasto na jogada: %.2f segundos\n", moveTimer.getSeconds());
+						moveTimer.reset();
 
 						if (game.getRemainingShips() == 0) {
 							game.over();
