@@ -15,6 +15,8 @@ public class Tasks {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
+    private static final String PDF = "pdf";
+
 	/**
 	 * The constant GOODBYE_MESSAGE.
 	 */
@@ -32,6 +34,7 @@ public class Tasks {
 	private static final String MAPA = "mapa";
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
+	private static final String GUI = "gui";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -49,15 +52,24 @@ public class Tasks {
 		while (!command.equals(DESISTIR)) {
 
 			switch (command) {
-				case GERAFROTA:
+                case PDF:
+                    if (game != null) {
+                        PdfReport.exportMovesToPDF(game.getAlienMoves(), "jogadas.pdf");
+                    }
+                    break;
+                case GERAFROTA:
 					myFleet = Fleet.createRandom();
 					game = new Game(myFleet);
+					BattleshipGUI.setGame(game);
 					game.printMyBoard(false, true);
+					BattleshipGUI.updateBoard();
 					break;
 				case LEFROTA:
 					myFleet = buildFleet(in);
 					game = new Game(myFleet);
+					BattleshipGUI.setGame(game);
 					game.printMyBoard(false, true);
+					BattleshipGUI.updateBoard();
 					break;
 				case STATUS:
 					if (myFleet != null)
@@ -76,19 +88,32 @@ public class Tasks {
 						game.printMyBoard(true, false);
 						System.out.printf("Tempo gasto na jogada: %.2f segundos\n", moveTimer.getSeconds());
 						moveTimer.reset();
+						BattleshipGUI.updateBoard();
+                case RAJADA:
+                    if (game != null) {
+                        System.out.println("Introduza 3 posições de tiro (exemplo: A1 B2 C3):");
 
-						if (game.getRemainingShips() == 0) {
-							game.over();
-							System.exit(0);
-						}
-					}
-					break;
+                        in.nextLine(); // limpar buffer
+                        game.readEnemyFire(in);
+
+                        myFleet.printStatus();
+                        game.printMyBoard(true, false);
+
+                        if (game.getRemainingShips() == 0) {
+                            game.over();
+                            System.exit(0);
+                        }
+                    } else {
+                        System.out.println("Primeiro deve gerar ou carregar uma frota (comando: gerafrota ou lefrota).");
+                    }
+                    break;
 				case SIMULA:
 					if (game != null) {
-						while (game.getRemainingShips() > 0){
+						while (game.getRemainingShips() > 0) {
 							game.randomEnemyFire();
 							myFleet.printStatus();
 							game.printMyBoard(true, false);
+							BattleshipGUI.updateBoard();
 							try {
 								Thread.sleep(3000);
 							} catch (InterruptedException e) {
@@ -106,9 +131,12 @@ public class Tasks {
 					if (game != null)
 						game.printMyBoard(true, true);
 					break;
-                case AJUDA:
-                    menuHelp();
-                    break;
+				case AJUDA:
+					menuHelp();
+					break;
+				case GUI:
+					BattleshipGUI.launchGUI();
+					break;
 				default:
 					System.out.println("Que comando é esse??? Repete ...");
 			}
@@ -124,16 +152,19 @@ public class Tasks {
 	public static void menuHelp() {
 		System.out.println("======================= AJUDA DO MENU =========================");
 		System.out.println("Digite um dos comandos abaixo para interagir com o jogo:");
-		System.out.println("- " + GERAFROTA + ": Gera uma frota aleatória de navios.");
+        System.out.println("- pdf: Exporta as jogadas para PDF.");
+        System.out.println("- " + GERAFROTA + ": Gera uma frota aleatória de navios.");
 		System.out.println("- " + LEFROTA + ": Permite criar e carregar uma frota personalizada.");
 		System.out.println("- " + STATUS + ": Mostra o status atual da frota.)");
 		System.out.println("- " + MAPA + ": Exibe o mapa da frota.");
 		System.out.println("- " + RAJADA + ": Realiza uma rajada de disparos.");
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
+		System.out.println("- " + GUI + ": Abre a visualização gráfica do tabuleiro.");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("===============================================================");
 	}
+
 	/**
 	 * This operation allows the build up of a fleet, given user data
 	 *
