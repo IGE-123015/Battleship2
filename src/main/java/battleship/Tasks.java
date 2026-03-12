@@ -32,6 +32,7 @@ public class Tasks {
 	private static final String MAPA = "mapa";
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
+	private static final String GUI = "gui";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -51,12 +52,16 @@ public class Tasks {
 				case GERAFROTA:
 					myFleet = Fleet.createRandom();
 					game = new Game(myFleet);
+					BattleshipGUI.setGame(game);
 					game.printMyBoard(false, true);
+					BattleshipGUI.updateBoard();
 					break;
 				case LEFROTA:
 					myFleet = buildFleet(in);
 					game = new Game(myFleet);
+					BattleshipGUI.setGame(game);
 					game.printMyBoard(false, true);
+					BattleshipGUI.updateBoard();
 					break;
 				case STATUS:
 					if (myFleet != null)
@@ -71,6 +76,7 @@ public class Tasks {
 						game.readEnemyFire(in);
 						myFleet.printStatus();
 						game.printMyBoard(true, false);
+						BattleshipGUI.updateBoard();
 
 						if (game.getRemainingShips() == 0) {
 							game.over();
@@ -80,10 +86,11 @@ public class Tasks {
 					break;
 				case SIMULA:
 					if (game != null) {
-						while (game.getRemainingShips() > 0){
+						while (game.getRemainingShips() > 0) {
 							game.randomEnemyFire();
 							myFleet.printStatus();
 							game.printMyBoard(true, false);
+							BattleshipGUI.updateBoard();
 							try {
 								Thread.sleep(3000);
 							} catch (InterruptedException e) {
@@ -101,9 +108,12 @@ public class Tasks {
 					if (game != null)
 						game.printMyBoard(true, true);
 					break;
-                case AJUDA:
-                    menuHelp();
-                    break;
+				case AJUDA:
+					menuHelp();
+					break;
+				case GUI:
+					BattleshipGUI.launchGUI();
+					break;
 				default:
 					System.out.println("Que comando é esse??? Repete ...");
 			}
@@ -126,9 +136,11 @@ public class Tasks {
 		System.out.println("- " + RAJADA + ": Realiza uma rajada de disparos.");
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
+		System.out.println("- " + GUI + ": Abre a visualização gráfica do tabuleiro.");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("===============================================================");
 	}
+
 	/**
 	 * This operation allows the build up of a fleet, given user data
 	 *
