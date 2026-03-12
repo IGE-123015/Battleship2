@@ -79,7 +79,22 @@ public class Tasks {
 					if (myFleet != null)
 						game.printMyBoard(false, true);
 					break;
+                case RAJADA:
+                    if (game != null) {
+                        System.out.println("Introduza 3 posições de tiro (exemplo: A1 B2 C3):");
+                        in.nextLine();
+                        game.readEnemyFire(in);
+                        myFleet.printStatus();
+                        game.printMyBoard(true, false);
 
+                        if (game.getRemainingShips() == 0) {
+                            game.over();
+                            System.exit(0);
+                        }
+                    } else {
+                        System.out.println("Primeiro deve gerar ou carregar uma frota.");
+                    }
+                    break;
 				case SIMULA:
 					if (game != null) {
 						while (game.getRemainingShips() > 0) {
