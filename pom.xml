@@ -84,11 +84,25 @@
 			<version>${jetbrains.annotations.version}</version>
 			<scope>compile</scope>
 		</dependency>
+<<<<<<< Tabuleiro
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>21</version>
 		</dependency>
+=======
+
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+>>>>>>> master
 	</dependencies>
 
 	<build>
