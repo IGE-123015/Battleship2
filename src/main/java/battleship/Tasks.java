@@ -43,6 +43,7 @@ public class Tasks {
 
 		IFleet myFleet = null;
 		IGame game = null;
+		Timer moveTimer = new Timer();
 		menuHelp();
 
 		System.out.print("> ");
@@ -78,18 +79,18 @@ public class Tasks {
 					if (myFleet != null)
 						game.printMyBoard(false, true);
 					break;
-<<<<<<< Tabuleiro
 				case RAJADA:
 					if (game != null) {
+						moveTimer.start();
 						game.readEnemyFire(in);
+						moveTimer.stop();
 						myFleet.printStatus();
 						game.printMyBoard(true, false);
+						System.out.printf("Tempo gasto na jogada: %.2f segundos\n", moveTimer.getSeconds());
+						moveTimer.reset();
 						BattleshipGUI.updateBoard();
-=======
                 case RAJADA:
                     if (game != null) {
->>>>>>> master
-
                         System.out.println("Introduza 3 posições de tiro (exemplo: A1 B2 C3):");
 
                         in.nextLine(); // limpar buffer
