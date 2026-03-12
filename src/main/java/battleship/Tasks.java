@@ -15,6 +15,8 @@ public class Tasks {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
+    private static final String PDF = "pdf";
+
 	/**
 	 * The constant GOODBYE_MESSAGE.
 	 */
@@ -48,7 +50,12 @@ public class Tasks {
 		while (!command.equals(DESISTIR)) {
 
 			switch (command) {
-				case GERAFROTA:
+                case PDF:
+                    if (game != null) {
+                        PdfReport.exportMovesToPDF(game.getAlienMoves(), "jogadas.pdf");
+                    }
+                    break;
+                case GERAFROTA:
 					myFleet = Fleet.createRandom();
 					game = new Game(myFleet);
 					game.printMyBoard(false, true);
@@ -66,18 +73,19 @@ public class Tasks {
 					if (myFleet != null)
 						game.printMyBoard(false, true);
 					break;
-				case RAJADA:
-					if (game != null) {
-						game.readEnemyFire(in);
-						myFleet.printStatus();
-						game.printMyBoard(true, false);
+                case RAJADA:
+                    if (game != null) {
+                        in.nextLine(); // limpa o resto da linha do comando
+                        game.readEnemyFire(in);
+                        myFleet.printStatus();
+                        game.printMyBoard(true, false);
 
-						if (game.getRemainingShips() == 0) {
-							game.over();
-							System.exit(0);
-						}
-					}
-					break;
+                        if (game.getRemainingShips() == 0) {
+                            game.over();
+                            System.exit(0);
+                        }
+                    }
+                    break;
 				case SIMULA:
 					if (game != null) {
 						while (game.getRemainingShips() > 0){
@@ -119,7 +127,8 @@ public class Tasks {
 	public static void menuHelp() {
 		System.out.println("======================= AJUDA DO MENU =========================");
 		System.out.println("Digite um dos comandos abaixo para interagir com o jogo:");
-		System.out.println("- " + GERAFROTA + ": Gera uma frota aleatória de navios.");
+        System.out.println("- pdf: Exporta as jogadas para PDF.");
+        System.out.println("- " + GERAFROTA + ": Gera uma frota aleatória de navios.");
 		System.out.println("- " + LEFROTA + ": Permite criar e carregar uma frota personalizada.");
 		System.out.println("- " + STATUS + ": Mostra o status atual da frota.)");
 		System.out.println("- " + MAPA + ": Exibe o mapa da frota.");
