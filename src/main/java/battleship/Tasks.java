@@ -75,8 +75,12 @@ public class Tasks {
 					break;
                 case RAJADA:
                     if (game != null) {
-                        in.nextLine(); // limpa o resto da linha do comando
+
+                        System.out.println("Introduza 3 posições de tiro (exemplo: A1 B2 C3):");
+
+                        in.nextLine(); // limpar buffer
                         game.readEnemyFire(in);
+
                         myFleet.printStatus();
                         game.printMyBoard(true, false);
 
@@ -84,6 +88,8 @@ public class Tasks {
                             game.over();
                             System.exit(0);
                         }
+                    } else {
+                        System.out.println("Primeiro deve gerar ou carregar uma frota (comando: gerafrota ou lefrota).");
                     }
                     break;
 				case SIMULA:
