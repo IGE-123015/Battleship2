@@ -217,8 +217,13 @@ public class Game implements IGame
 			for (int c = 0; c < BOARD_SIZE; c++)
 				usablePositions.add(new Position(r, c));
 
-		this.myFleet.getSunkShips().forEach(ship -> usablePositions.removeAll(ship.getAdjacentPositions()));
-		this.alienMoves.forEach(move ->  usablePositions.removeAll(move.getShots()));
+        for (IShip ship : this.myFleet.getSunkShips()) {
+            usablePositions.removeAll(new HashSet<>(ship.getAdjacentPositions()));
+        }
+
+        for (IMove move : this.alienMoves) {
+            usablePositions.removeAll(new HashSet<>(move.getShots()));
+        }
 
 		List<IPosition> candidateShots = new ArrayList<>(usablePositions);
 
