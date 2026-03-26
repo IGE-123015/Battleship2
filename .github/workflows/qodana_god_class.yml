@@ -3,9 +3,9 @@ name: Qodana - God Class Detection
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main, master ] # Adicionei as duas para garantir
   pull_request:
-    branches: [ master ]
+    branches: [ main, master ]
 
 jobs:
   qodana:
@@ -20,12 +20,9 @@ jobs:
         with:
           args: >
             --property=qodana.inspections.config.path=qodana.yaml
-          env:
-            QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        env: # O 'env' tem de estar aqui, alinhado com o 'with'
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
 
       - name: 'Check Quality Gate'
-        # O Quality Gate falha se forem encontradas classes que cumpram:
-        # ATFD >= 6 AND TCC < 0.33 AND WMC >= 47
         run: |
           echo "Verificando instâncias de God Class..."
-          # Aqui o Qodana utiliza o ficheiro de configuração local
