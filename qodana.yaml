@@ -44,7 +44,6 @@ projectJDK: "25" #(Applied in CI/CD pipeline)
 #    fresh: 70
 #    total: 50
 
-
 #Specify Qodana linter for analysis (Applied in CI/CD pipeline)
 linter: jetbrains/qodana-jvm:2025.2
 
@@ -59,3 +58,12 @@ inspections:
       m_limit: 25
       ignoreGettersAndSetters: true
       ignoreOverridingMethods: true
+# Perfil de inspeção focado em métricas de classe
+include:
+  - name: JavaDesignCodeSmells
+  - name: ClassMetrics
+    # Valores limite baseados na Figura 2 do guião
+    options:
+      ATFD: 6
+      TCC: 0.33
+      WMC: 47
