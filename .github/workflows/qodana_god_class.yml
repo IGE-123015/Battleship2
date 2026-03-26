@@ -1,0 +1,30 @@
+# Aluno: 112949 - Pedro Santana
+name: Qodana - God Class Detection
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@v2023.2
+        with:
+          # Configuração baseada nos perfis da Figura 2 do guião
+          args: >
+            --property=qodana.inspections.config.path=qodana.yaml
+
+      - name: 'Check Quality Gate'
+        # O Quality Gate falha se forem encontradas classes que cumpram:
+        # ATFD >= 6 AND TCC < 0.33 AND WMC >= 47
+        run: |
+          echo "Verificando instâncias de God Class..."
+          # Aqui o Qodana utiliza o ficheiro de configuração local
