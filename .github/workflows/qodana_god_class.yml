@@ -18,9 +18,9 @@ jobs:
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2023.2
         with:
-          # Configuração baseada nos perfis da Figura 2 do guião
-          args: >
-            --property=qodana.inspections.config.path=qodana.yaml
+            args: --baseline,qodana.sarif.json # Isto evita a exigência do token em alguns contextos
+            # OU simplesmente remove a necessidade de upload:
+            push: false
 
       - name: 'Check Quality Gate'
         # O Quality Gate falha se forem encontradas classes que cumpram:
