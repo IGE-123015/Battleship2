@@ -58,6 +58,10 @@ inspections:
       m_limit: 25
       ignoreGettersAndSetters: true
       ignoreOverridingMethods: true
+
+
+failThreshold: 0
+
 # Perfil de inspeção focado em métricas de classe
 include:
   - name: JavaDesignCodeSmells
