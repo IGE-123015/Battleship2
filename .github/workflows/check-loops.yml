@@ -6,9 +6,9 @@ name: Qodana Quality Gate - Multiple Loops Detection
 
 on:
   push:
-    branches:
-      - main
+    branches: [ master ]
   pull_request:
+    branches: [ master ]
 
 jobs:
   qodana:
