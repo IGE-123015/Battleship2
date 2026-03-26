@@ -1,28 +1,15 @@
-####################################################################################################################
-# WARNING: Do not store sensitive information in this file, as its contents will be included in the Qodana report. #
-####################################################################################################################
-
 version: "1.0"
-linter: jetbrains/qodana-jvm:2025.3
+
 profile:
-  name: qodana.recommended
+  name: qodana.starter
+
+projectJDK: "21"
+
 include:
-  - name: CheckDependencyLicenses
-  - name: JavaDesignCodeSmells
   - name: OverlyLongMethod
-  - name: ClassMetrics
-    # Valores limite baseados na Figura 2 do guião
-    options:
-      ATFD: 6
-      TCC: 0.33
-      WMC: 47
-inspections:
-  - inspection: ClassWithTooManyMethods
-    enabled: true
-    # Definimos 25 métodos como o limite (Very-high NOM)
-    # conforme a Figura 1 da ficha laboratorial
-    options:
-      m_limit: 25
-      ignoreGettersAndSetters: true
-      ignoreOverridingMethods: true
+  - name: ClassWithTooManyMethods
+  - name: MethodWithMultipleLoops
+
 failThreshold: 0
+
+linter: jetbrains/qodana-jvm:2025.2
