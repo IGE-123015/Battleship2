@@ -1,22 +1,31 @@
 # Aluno: 112949 - Pedro Santana
-name: Qodana-God-Class
+name: Qodana - God Class Detection
+
 on:
-  push:
-    branches: [main, master]
+  workflow_dispatch:
   pull_request:
-    branches: [main, master]
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+
 jobs:
   qodana:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Qodana-Scan
-        uses: JetBrains/qodana-action@v2023.2
+
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@v2025.3
         with:
-          args: >
-            --property=qodana.inspections.config.path=qodana.yaml
-      - name: Check
-        run: echo "Analise concluida"
+          # Usamos o linter de JVM e apontamos para o teu ficheiro de métricas
+          args: --linter qodana-jvm --property=qodana.inspections.config.path=qodana.yaml
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
