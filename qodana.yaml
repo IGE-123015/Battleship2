@@ -47,6 +47,21 @@ projectJDK: "25" #(Applied in CI/CD pipeline)
 #Specify Qodana linter for analysis (Applied in CI/CD pipeline)
 linter: jetbrains/qodana-jvm:2025.2
 
+# qodana.yaml
+
+inspections:
+  - inspection: ClassWithTooManyMethods
+    enabled: true
+    # Definimos 25 métodos como o limite (Very-high NOM)
+    # conforme a Figura 1 da ficha laboratorial
+    options:
+      m_limit: 25
+      ignoreGettersAndSetters: true
+      ignoreOverridingMethods: true
+
+
+failThreshold: 0
+
 # Perfil de inspeção focado em métricas de classe
 include:
   - name: JavaDesignCodeSmells
