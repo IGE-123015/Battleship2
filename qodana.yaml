@@ -8,3 +8,21 @@ profile:
   name: qodana.recommended
 include:
   - name: CheckDependencyLicenses
+  - name: JavaDesignCodeSmells
+  - name: OverlyLongMethod
+  - name: ClassMetrics
+    # Valores limite baseados na Figura 2 do guião
+    options:
+      ATFD: 6
+      TCC: 0.33
+      WMC: 47
+inspections:
+  - inspection: ClassWithTooManyMethods
+    enabled: true
+    # Definimos 25 métodos como o limite (Very-high NOM)
+    # conforme a Figura 1 da ficha laboratorial
+    options:
+      m_limit: 25
+      ignoreGettersAndSetters: true
+      ignoreOverridingMethods: true
+failThreshold: 0
