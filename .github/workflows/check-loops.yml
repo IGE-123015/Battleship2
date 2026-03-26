@@ -1,0 +1,40 @@
+# Aluno: 106806 - Francisco Santos
+# Este workflow operacionaliza um Quality Gate no GitHub Actions usando o Qodana
+# para detetar o cheiro "Method with multiple loops" no projeto BattleShip2.
+
+name: Qodana Quality Gate - Multiple Loops Detection
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@v2024.1
+        with:
+          # Define o Quality Gate: falha se encontrar qualquer instância (limite 0)
+          fail-threshold: 0
+          # Garante que as métricas de método são analisadas
+          args: --baseline,qodana.sarif.json
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
+      - name: Upload results to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
