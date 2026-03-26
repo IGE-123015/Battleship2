@@ -65,6 +65,7 @@ failThreshold: 0
 # Perfil de inspeção focado em métricas de classe
 include:
   - name: JavaDesignCodeSmells
+  - name: OverlyLongMethod
   - name: ClassMetrics
     # Valores limite baseados na Figura 2 do guião
     options:
