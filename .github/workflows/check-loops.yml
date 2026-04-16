@@ -6,9 +6,9 @@ name: Qodana Quality Gate - Multiple Loops Detection
 
 on:
   push:
-    branches:
-      - main
+    branches: [ master ]
   pull_request:
+    branches: [ master ]
 
 jobs:
   qodana:
@@ -17,6 +17,7 @@ jobs:
       contents: write
       pull-requests: write
       checks: write
+      security-events: write  # Adiciona esta linha para corrigir o erro
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
