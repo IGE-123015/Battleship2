@@ -159,8 +159,22 @@ public class PositionTest {
 
 	@Test
 	void isAdjacentTo_notAdjacent() {
+		// row diff=2, col diff=2 → first condition false, short-circuits
 		assertFalse(position.isAdjacentTo(new Position(4, 5)),
 				"Non-adjacent position incorrectly identified as adjacent.");
+	}
+
+	/**
+	 * Covers the branch: rowDiff <= 1 (first condition TRUE) but colDiff > 1
+	 * (second condition FALSE). Without this test JaCoCo reports 95% branch
+	 * coverage because the right-hand side of the && is never evaluated as false.
+	 * position = (2,3); target = (2,6) → rowDiff=0 <=1 ✓, colDiff=3 >1 → false
+	 */
+	@Test
+	void isAdjacentTo_sameRowFarColumn() {
+		// row diff = 0 (<=1, first operand TRUE), col diff = 3 (>1, second operand FALSE)
+		assertFalse(position.isAdjacentTo(new Position(2, 6)),
+				"Position in the same row but 3 columns away should not be adjacent.");
 	}
 
 	@Test
