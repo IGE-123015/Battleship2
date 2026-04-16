@@ -1,0 +1,312 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > BattleshipGUI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">battleship</a>
+</div>
+
+<h1>Coverage Summary for Class: BattleshipGUI (battleship)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BattleshipGUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92%
+  </span>
+  <span class="absValue">
+    (46/50)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (74/74)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BattleshipGUI$CenteredText</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92%
+  </span>
+  <span class="absValue">
+    (46/50)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (78/78)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package battleship;
+&nbsp;
+&nbsp;import javafx.application.Application;
+&nbsp;import javafx.application.Platform;
+&nbsp;import javafx.geometry.Insets;
+&nbsp;import javafx.scene.Scene;
+&nbsp;import javafx.scene.layout.GridPane;
+&nbsp;import javafx.scene.layout.StackPane;
+&nbsp;import javafx.scene.paint.Color;
+&nbsp;import javafx.scene.shape.Rectangle;
+&nbsp;import javafx.scene.text.Text;
+&nbsp;import javafx.stage.Stage;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+<b class="fc">&nbsp;public class BattleshipGUI extends Application {</b>
+&nbsp;
+&nbsp;    private static final int TILE_SIZE = 40;
+&nbsp;    private static GridPane grid;
+&nbsp;    private static IGame activeGame;
+<b class="fc">&nbsp;    private static boolean showShips = true;</b>
+&nbsp;
+&nbsp;    private static BattleshipGUI instance;
+&nbsp;    private static Stage stage;
+<b class="fc">&nbsp;    private static boolean launched = false;</b>
+&nbsp;
+&nbsp;    public static void setGame(IGame game) {
+<b class="fc">&nbsp;        activeGame = game;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void updateBoard() {
+<b class="fc">&nbsp;        if (instance != null) {</b>
+<b class="fc">&nbsp;            Platform.runLater(() -&gt; instance.refresh());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void start(Stage primaryStage) {
+<b class="fc">&nbsp;        instance = this;</b>
+<b class="fc">&nbsp;        stage = primaryStage;</b>
+<b class="fc">&nbsp;        Platform.setImplicitExit(false); // Prevent app from closing when window is closed</b>
+&nbsp;
+<b class="fc">&nbsp;        grid = new GridPane();</b>
+<b class="fc">&nbsp;        grid.setPadding(new Insets(10));</b>
+<b class="fc">&nbsp;        grid.setHgap(2);</b>
+<b class="fc">&nbsp;        grid.setVgap(2);</b>
+&nbsp;
+<b class="fc">&nbsp;        refresh();</b>
+&nbsp;
+<b class="fc">&nbsp;        Scene scene = new Scene(grid);</b>
+<b class="fc">&nbsp;        stage.setTitle(&quot;Battleship Board&quot;);</b>
+<b class="fc">&nbsp;        stage.setScene(scene);</b>
+<b class="fc">&nbsp;        stage.setOnCloseRequest(e -&gt; stage.hide()); // Just hide instead of exiting</b>
+<b class="fc">&nbsp;        stage.show();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void refresh() {
+<b class="fc">&nbsp;        if (activeGame == null)</b>
+&nbsp;            return;
+&nbsp;
+<b class="fc">&nbsp;        grid.getChildren().clear();</b>
+&nbsp;
+&nbsp;        // Add headers
+<b class="fc">&nbsp;        for (int col = 0; col &lt; Game.BOARD_SIZE; col++) {</b>
+<b class="fc">&nbsp;            grid.add(new CenteredText(String.valueOf(col + 1)), col + 1, 0);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        for (int row = 0; row &lt; Game.BOARD_SIZE; row++) {</b>
+<b class="fc">&nbsp;            grid.add(new CenteredText(String.valueOf((char) (&#39;A&#39; + row))), 0, row + 1);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        char[][] map = generateMap();</b>
+&nbsp;
+<b class="fc">&nbsp;        for (int row = 0; row &lt; Game.BOARD_SIZE; row++) {</b>
+<b class="fc">&nbsp;            for (int col = 0; col &lt; Game.BOARD_SIZE; col++) {</b>
+<b class="fc">&nbsp;                Rectangle rect = new Rectangle(TILE_SIZE, TILE_SIZE);</b>
+<b class="fc">&nbsp;                rect.setStroke(Color.LIGHTGRAY);</b>
+&nbsp;
+<b class="fc">&nbsp;                char marker = map[row][col];</b>
+<b class="fc">&nbsp;                switch (marker) {</b>
+<b class="fc">&nbsp;                    case &#39;#&#39; -&gt; rect.setFill(showShips ? Color.GRAY : Color.AZURE); // Ship</b>
+<b class="fc">&nbsp;                    case &#39;*&#39; -&gt; rect.setFill(Color.ORANGERED); // Hit</b>
+<b class="fc">&nbsp;                    case &#39;o&#39; -&gt; rect.setFill(Color.LIGHTBLUE); // Miss</b>
+<b class="fc">&nbsp;                    case &#39;-&#39; -&gt; rect.setFill(Color.LIGHTYELLOW); // Adjacent</b>
+<b class="fc">&nbsp;                    default -&gt; rect.setFill(Color.AZURE); // Water</b>
+&nbsp;                }
+&nbsp;
+<b class="fc">&nbsp;                grid.add(rect, col + 1, row + 1);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private char[][] generateMap() {
+<b class="fc">&nbsp;        char[][] map = new char[Game.BOARD_SIZE][Game.BOARD_SIZE];</b>
+<b class="fc">&nbsp;        for (int r = 0; r &lt; Game.BOARD_SIZE; r++)</b>
+<b class="fc">&nbsp;            for (int c = 0; c &lt; Game.BOARD_SIZE; c++)</b>
+<b class="fc">&nbsp;                map[r][c] = &#39;.&#39;;</b>
+&nbsp;
+<b class="fc">&nbsp;        IFleet fleet = activeGame.getMyFleet();</b>
+<b class="fc">&nbsp;        List&lt;IMove&gt; moves = activeGame.getAlienMoves();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (fleet != null) {</b>
+<b class="fc">&nbsp;            for (IShip ship : fleet.getShips()) {</b>
+<b class="fc">&nbsp;                for (IPosition ship_pos : ship.getPositions())</b>
+<b class="fc">&nbsp;                    map[ship_pos.getRow()][ship_pos.getColumn()] = &#39;#&#39;;</b>
+<b class="fc">&nbsp;                if (!ship.stillFloating())</b>
+<b class="fc">&nbsp;                    for (IPosition adjacent_pos : ship.getAdjacentPositions())</b>
+<b class="fc">&nbsp;                        map[adjacent_pos.getRow()][adjacent_pos.getColumn()] = &#39;-&#39;;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        if (moves != null) {</b>
+<b class="fc">&nbsp;            for (IMove move : moves) {</b>
+<b class="fc">&nbsp;                for (IPosition shot : move.getShots()) {</b>
+<b class="fc">&nbsp;                    if (shot.isInside()) {</b>
+<b class="fc">&nbsp;                        int row = shot.getRow();</b>
+<b class="fc">&nbsp;                        int col = shot.getColumn();</b>
+<b class="fc">&nbsp;                        if (map[row][col] == &#39;#&#39;)</b>
+<b class="fc">&nbsp;                            map[row][col] = &#39;*&#39;;</b>
+<b class="pc">&nbsp;                        else if (map[row][col] == &#39;.&#39; || map[row][col] == &#39;-&#39;)</b>
+<b class="fc">&nbsp;                            map[row][col] = &#39;o&#39;;</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return map;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static class CenteredText extends StackPane {
+<b class="fc">&nbsp;        public CenteredText(String value) {</b>
+<b class="fc">&nbsp;            Text text = new Text(value);</b>
+<b class="fc">&nbsp;            getChildren().add(text);</b>
+<b class="fc">&nbsp;            setPrefSize(TILE_SIZE, TILE_SIZE);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void launchGUI() {
+<b class="fc">&nbsp;        if (launched) {</b>
+<b class="fc">&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="pc">&nbsp;                if (stage != null) {</b>
+<b class="fc">&nbsp;                    stage.show();</b>
+<b class="fc">&nbsp;                    instance.refresh();</b>
+&nbsp;                }
+&nbsp;            });
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        launched = true;</b>
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            Platform.startup(() -&gt; {</b>
+<b class="fc">&nbsp;                Stage newStage = new Stage();</b>
+<b class="fc">&nbsp;                new BattleshipGUI().start(newStage);</b>
+&nbsp;            });
+&nbsp;        } catch (IllegalStateException e) {
+&nbsp;            // Toolkit already initialized
+<b class="fc">&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="fc">&nbsp;                Stage newStage = new Stage();</b>
+<b class="fc">&nbsp;                new BattleshipGUI().start(newStage);</b>
+&nbsp;            });
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-04-16 16:10</div>
+</div>
+</body>
+</html>
