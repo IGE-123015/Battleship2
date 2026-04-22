@@ -210,9 +210,9 @@ public class Fleet implements IFleet
     {
 		assert s != null;
 
-		for (int i = 0; i < ships.size(); i++)
+		for (IShip existing : ships)
 		{
-			if (ships.get(i).tooCloseTo(s))
+			if (existing.tooCloseTo(s))
 				return true;
 		}
 		return false;
