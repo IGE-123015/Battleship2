@@ -168,12 +168,12 @@ import java.util.ArrayList;
 		}
 
 		/**
-		 * Test for private method colisionRisk.
+		 * Test for private method collisionRisk.
 		 * Cyclomatic Complexity: 2
 		 */
 		@Test
 		void testColisionRisk() throws Exception {
-			var method = Fleet.class.getDeclaredMethod("colisionRisk", IShip.class);
+			var method = Fleet.class.getDeclaredMethod("collisionRisk", IShip.class);
 			method.setAccessible(true);
 
 			IShip ship1 = new Barge(Compass.NORTH, new Position(1, 1));
