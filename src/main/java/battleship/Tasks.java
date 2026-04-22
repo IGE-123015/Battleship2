@@ -23,6 +23,12 @@ public class Tasks {
 	private static final String GOODBYE_MESSAGE = "Bons ventos!";
 
 	/**
+	 * Message shown when a game action requires a fleet to be loaded first.
+	 * Introduced as a constant to eliminate duplicated magic strings (Introduce Constant refactoring).
+	 */
+	private static final String FLEET_NOT_READY_MSG = "Primeiro deve gerar ou carregar uma frota.";
+
+	/**
 	 * Strings to be used by the user
 	 */
 	private static final String AJUDA = "ajuda";
@@ -96,7 +102,7 @@ public class Tasks {
 							System.exit(0);
 						}
                     } else {
-                        System.out.println("Primeiro deve gerar ou carregar uma frota.");
+                        System.out.println(FLEET_NOT_READY_MSG);
                     }
                     break;
 				case SIMULA:
