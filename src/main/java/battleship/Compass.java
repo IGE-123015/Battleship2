@@ -1,5 +1,7 @@
 package battleship;
 
+import java.util.Map;
+
 /**
  * The enum Compass.
  *
@@ -23,6 +25,17 @@ public enum Compass
 	 * West compass.
 	 */
 	WEST('o');
+
+	/**
+	 * Map from char to Compass direction, used to replace the switch statement
+	 * in charToCompass (Switch Statements code smell).
+	 */
+	private static final Map<Character, Compass> CHAR_TO_COMPASS_MAP = Map.of(
+		'n', NORTH,
+		's', SOUTH,
+		'e', EAST,
+		'o', WEST
+	);
 
 	/**
 	 * Generate a random compass direction (bearing).
@@ -80,25 +93,6 @@ public enum Compass
 	 */
 	static Compass charToCompass(char ch)
     {
-        Compass bearing;
-        switch (ch)
-        {
-        case 'n':
-            bearing = NORTH;
-            break;
-        case 's':
-            bearing = SOUTH;
-            break;
-        case 'e':
-            bearing = EAST;
-            break;
-        case 'o':
-            bearing = WEST;
-            break;
-        default:
-            bearing = null;
-        }
-    
-        return bearing;
+        return CHAR_TO_COMPASS_MAP.get(ch);
     }
 }

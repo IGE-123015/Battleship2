@@ -1,10 +1,10 @@
 package battleship;
 
 public class GameRecord {
-    public String date;
-    public int totalMoves;
-    public int hits;
-    public int sunkShips;
+    private String date;
+    private int totalMoves;
+    private int hits;
+    private int sunkShips;
 
     public GameRecord(int totalMoves, int hits, int sunkShips) {
         // Guarda a data e hora atual do jogo num formato limpo
@@ -12,5 +12,21 @@ public class GameRecord {
         this.totalMoves = totalMoves;
         this.hits = hits;
         this.sunkShips = sunkShips;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public int getTotalMoves() {
+        return totalMoves;
+    }
+
+    public int getHits() {
+        return hits;
+    }
+
+    public int getSunkShips() {
+        return sunkShips;
     }
 }

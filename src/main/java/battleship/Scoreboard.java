@@ -64,7 +64,7 @@ public class Scoreboard {
                 for (int i = 0; i < scores.size(); i++) {
                     GameRecord r = scores.get(i);
                     System.out.printf("Jogo %d [%s] -> Jogadas: %d | Tiros Certeiros: %d | Navios Afundados: %d%n",
-                            (i + 1), r.date, r.totalMoves, r.hits, r.sunkShips);
+                            (i + 1), r.getDate(), r.getTotalMoves(), r.getHits(), r.getSunkShips());
                 }
                 System.out.println("=======================================\n");
             }
