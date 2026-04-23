@@ -1,3 +1,5 @@
+# Workflow ([![Java with Maven](https://github.com/IGE-123015/Battleship2/actions/workflows/java_with_maven.yml/badge.svg)](https://github.com/IGE-123015/Battleship2/actions/workflows/java_with_maven.yml))
+
 # Video Demo (https://youtu.be/n-aDsRmwi1k)
 
 # Video D4 (https://youtu.be/C4TCOjEK4rk)

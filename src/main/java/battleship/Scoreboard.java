@@ -15,18 +15,21 @@ public class Scoreboard {
     private static final String FILE_NAME = "scoreboard.json";
 
     public static void saveScore(int moves, int hits, int sinks) {
-        // Cria um Gson configurado para formatar o JSON de forma bonita (com indentação)
+        // Cria um Gson configurado para formatar o JSON de forma bonita (com
+        // indentação)
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         File file = new File(FILE_NAME);
         List<GameRecord> scores = new ArrayList<>();
-        Type listType = new TypeToken<List<GameRecord>>(){}.getType();
+        Type listType = new TypeToken<List<GameRecord>>() {
+        }.getType();
 
         try {
             // Se o ficheiro já existir, lê o histórico antigo primeiro
             if (file.exists() && file.length() > 0) {
                 try (FileReader reader = new FileReader(file)) {
                     scores = gson.fromJson(reader, listType);
-                    if (scores == null) scores = new ArrayList<>(); // Prevenção extra
+                    if (scores == null)
+                        scores = new ArrayList<>(); // Prevenção extra
                 }
             }
 
@@ -52,7 +55,8 @@ public class Scoreboard {
         }
 
         try {
-            Type listType = new TypeToken<List<GameRecord>>(){}.getType();
+            Type listType = new TypeToken<List<GameRecord>>() {
+            }.getType();
             try (FileReader reader = new FileReader(file)) {
                 List<GameRecord> scores = gson.fromJson(reader, listType);
 

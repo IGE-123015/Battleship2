@@ -1,24 +1,20 @@
 package battleship;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for class Timer.
- * Author: ${user.name}
- * Date: 2026-04-16
- * Cyclomatic Complexity:
+ * Test class for the Timer class.
+ *
+ * Cyclomatic Complexity for each method:
  * - constructor: 1
- * - start(): 1
- * - stop(): 1
- * - reset(): 1
- * - getTimeMillis(): 1
- * - getSeconds(): 1
+ * - start: 1
+ * - stop: 1
+ * - reset: 1
+ * - getTimeMillis: 1
+ * - getSeconds: 1
  */
-class TimerTest {
+public class TimerTest {
 
     private Timer timer;
 
@@ -32,151 +28,61 @@ class TimerTest {
         timer = null;
     }
 
-    // Test for constructor - CC = 1
     @Test
-    void testConstructor() {
-        Timer newTimer = new Timer();
-        assertNotNull(newTimer, "Error: Timer instance should not be null");
+    void constructor() {
+        assertNotNull(timer, "Timer instance should not be null.");
+        // Before starting, time should be 0
+        assertEquals(0L, timer.getTimeMillis(), "Initial time should be 0 ms.");
+        assertEquals(0.0, timer.getSeconds(), 0.001, "Initial seconds should be 0.0.");
     }
 
-    // Test for start() - CC = 1
     @Test
-    void start() {
-        assertAll("Start method should execute without exceptions",
-                () -> {
-                    assertDoesNotThrow(() -> timer.start(), "Error: start() should not throw an exception");
-                }
-        );
+    void startAndStop() throws InterruptedException {
+        timer.start();
+        Thread.sleep(50); // wait at least 50 ms
+        timer.stop();
+
+        long millis = timer.getTimeMillis();
+        assertTrue(millis >= 50, "Elapsed time should be at least 50 ms, got: " + millis);
     }
 
-    // Test for stop() - CC = 1
     @Test
-    void stop() {
-        assertAll("Stop method should execute without exceptions",
-                () -> {
-                    timer.start();
-                    assertDoesNotThrow(() -> timer.stop(), "Error: stop() should not throw an exception");
-                }
-        );
+    void getSeconds() throws InterruptedException {
+        timer.start();
+        Thread.sleep(100);
+        timer.stop();
+
+        double seconds = timer.getSeconds();
+        assertTrue(seconds >= 0.1, "Elapsed seconds should be at least 0.1 s, got: " + seconds);
+        assertEquals(timer.getTimeMillis() / 1000.0, seconds, 0.001, "getSeconds should equal getTimeMillis / 1000.0.");
     }
 
-    // Test for reset() - CC = 1
     @Test
-    void reset() {
-        assertAll("Reset method should execute without exceptions",
-                () -> {
-                    timer.start();
-                    timer.stop();
-                    long timeAfterStop = timer.getTimeMillis();
-                    assertTrue(timeAfterStop >= 0, "Error: time should be non-negative after stop");
-                    assertDoesNotThrow(() -> timer.reset(), "Error: reset() should not throw an exception");
-                    long timeAfterReset = timer.getTimeMillis();
-                    assertEquals(0, timeAfterReset, "Error: time should be 0 after reset");
-                }
-        );
+    void reset() throws InterruptedException {
+        timer.start();
+        Thread.sleep(50);
+        timer.stop();
+        timer.reset();
+
+        assertEquals(0L, timer.getTimeMillis(), "After reset, time should be 0 ms.");
+        assertEquals(0.0, timer.getSeconds(), 0.001, "After reset, seconds should be 0.0.");
     }
 
-    // Test for getTimeMillis() - CC = 1
     @Test
-    void getTimeMillis() {
-        assertAll("getTimeMillis should return valid time measurement",
-                () -> {
-                    long initialTime = timer.getTimeMillis();
-                    assertEquals(0, initialTime, "Error: initial time should be 0 before start");
+    void startStopReset_canBeRestarted() throws InterruptedException {
+        // First run
+        timer.start();
+        Thread.sleep(30);
+        timer.stop();
+        long firstTime = timer.getTimeMillis();
+        assertTrue(firstTime >= 30);
 
-                    timer.start();
-                    // Small delay to ensure measurable time passes
-                    Thread.sleep(10);
-                    timer.stop();
-
-                    long elapsedTime = timer.getTimeMillis();
-                    assertTrue(elapsedTime >= 10, "Error: elapsed time should be at least 10ms");
-                    assertTrue(elapsedTime >= 0, "Error: elapsed time should not be negative");
-                }
-        );
-    }
-
-    // Test for getSeconds() - CC = 1
-    @Test
-    void getSeconds() {
-        assertAll("getSeconds should return valid time in seconds",
-                () -> {
-                    double initialSeconds = timer.getSeconds();
-                    assertEquals(0.0, initialSeconds, 0.001, "Error: initial seconds should be 0 before start");
-
-                    timer.start();
-                    // Small delay to ensure measurable time passes
-                    Thread.sleep(100);
-                    timer.stop();
-
-                    double elapsedSeconds = timer.getSeconds();
-                    assertTrue(elapsedSeconds >= 0.1, "Error: elapsed seconds should be at least 0.1");
-                    assertTrue(elapsedSeconds >= 0, "Error: elapsed seconds should not be negative");
-                }
-        );
-    }
-
-    // Integration test: verify time consistency between getTimeMillis() and getSeconds()
-    @Test
-    void testTimeConversion() {
-        assertAll("Time conversion should be consistent",
-                () -> {
-                    timer.start();
-                    Thread.sleep(50);
-                    timer.stop();
-
-                    long millis = timer.getTimeMillis();
-                    double seconds = timer.getSeconds();
-                    double expectedSeconds = millis / 1000.0;
-
-                    assertEquals(expectedSeconds, seconds, 0.001,
-                            "Error: getSeconds() should equal getTimeMillis() / 1000.0");
-                }
-        );
-    }
-
-    // Boundary test: multiple start/stop cycles
-    @Test
-    void testMultipleCycles() {
-        assertAll("Multiple start/stop cycles should accumulate time",
-                () -> {
-                    // First cycle
-                    timer.start();
-                    Thread.sleep(10);
-                    timer.stop();
-                    long firstCycleTime = timer.getTimeMillis();
-
-                    // IMPORTANT: StopWatch requires reset() before starting again
-                    timer.reset();
-
-                    // Second cycle
-                    timer.start();
-                    Thread.sleep(10);
-                    timer.stop();
-                    long secondCycleTime = timer.getTimeMillis();
-
-                    assertTrue(secondCycleTime >= 10,
-                            "Error: time in second cycle should be at least 10ms");
-                }
-        );
-    }
-
-    // Boundary test: reset during operation
-    @Test
-    void testResetDuringOperation() {
-        assertAll("Reset should clear the timer",
-                () -> {
-                    timer.start();
-                    Thread.sleep(10);
-                    timer.stop();
-
-                    long timeBeforeReset = timer.getTimeMillis();
-                    assertTrue(timeBeforeReset > 0, "Error: time should be positive before reset");
-
-                    timer.reset();
-                    long timeAfterReset = timer.getTimeMillis();
-                    assertEquals(0, timeAfterReset, "Error: time should be 0 after reset");
-                }
-        );
+        // Reset and second run
+        timer.reset();
+        timer.start();
+        Thread.sleep(30);
+        timer.stop();
+        long secondTime = timer.getTimeMillis();
+        assertTrue(secondTime >= 30, "Timer should work correctly after reset and restart.");
     }
 }

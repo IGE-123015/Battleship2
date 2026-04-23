@@ -17,6 +17,7 @@ jobs:
       contents: write
       pull-requests: write
       checks: write
+      security-events: write  # Adiciona esta linha para corrigir o erro
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
