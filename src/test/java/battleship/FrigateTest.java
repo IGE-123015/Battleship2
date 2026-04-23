@@ -55,6 +55,24 @@ public class FrigateTest {
 	}
 
 	/**
+	 * Test for the constructor with SOUTH bearing.
+	 * This covers the SOUTH case in the constructor switch statement.
+	 */
+	@Test
+	void testConstructorSouth() {
+		frigate = new Frigate(Compass.SOUTH, new Position(5, 5));
+		List<IPosition> positions = frigate.getPositions();
+
+		assertNotNull(frigate, "Error: Frigate instance should not be null.");
+		assertEquals(Compass.SOUTH, frigate.getBearing(), "Error: Frigate bearing should be SOUTH.");
+		assertEquals(4, positions.size(), "Error: Frigate should have exactly 4 positions.");
+		assertEquals(new Position(5, 5), positions.get(0), "Error: First position is incorrect for SOUTH.");
+		assertEquals(new Position(6, 5), positions.get(1), "Error: Second position is incorrect for SOUTH.");
+		assertEquals(new Position(7, 5), positions.get(2), "Error: Third position is incorrect for SOUTH.");
+		assertEquals(new Position(8, 5), positions.get(3), "Error: Fourth position is incorrect for SOUTH.");
+	}
+
+	/**
 	 * Test for the constructor with EAST bearing.
 	 */
 	@Test
@@ -123,7 +141,8 @@ public class FrigateTest {
 	}
 
 	/**
-	 * Test for the getTopMostPos method.
+	 * Test for the getTopMostPos method with NORTH bearing.
+	 * Positions share the same column; rows are 5,6,7,8 — no position is smaller than the first.
 	 * Cyclomatic Complexity: 2
 	 */
 	@Test
@@ -132,7 +151,18 @@ public class FrigateTest {
 	}
 
 	/**
-	 * Test for the getBottomMostPos method.
+	 * Test for the getTopMostPos method with EAST bearing.
+	 * All positions share the same row (all equal), so the 'if row < top' branch is never taken.
+	 */
+	@Test
+	void testGetTopMostPosEast() {
+		frigate = new Frigate(Compass.EAST, new Position(3, 2));
+		assertEquals(3, frigate.getTopMostPos(), "Error: The topmost position for EAST should be 3.");
+	}
+
+	/**
+	 * Test for the getBottomMostPos method with NORTH bearing.
+	 * Rows increase (5,6,7,8), hitting the 'if row > bottom' branch on each iteration.
 	 * Cyclomatic Complexity: 2
 	 */
 	@Test
@@ -141,7 +171,18 @@ public class FrigateTest {
 	}
 
 	/**
-	 * Test for the getLeftMostPos method.
+	 * Test for the getBottomMostPos method with EAST bearing.
+	 * All positions share the same row; 'if row > bottom' branch is never taken.
+	 */
+	@Test
+	void testGetBottomMostPosEast() {
+		frigate = new Frigate(Compass.EAST, new Position(3, 2));
+		assertEquals(3, frigate.getBottomMostPos(), "Error: The bottommost position for EAST should be 3.");
+	}
+
+	/**
+	 * Test for the getLeftMostPos method with NORTH bearing.
+	 * All positions share the same column, so 'if col < left' branch is never taken.
 	 * Cyclomatic Complexity: 2
 	 */
 	@Test
@@ -150,12 +191,33 @@ public class FrigateTest {
 	}
 
 	/**
-	 * Test for the getRightMostPos method.
+	 * Test for the getLeftMostPos method with EAST bearing.
+	 * Columns increase (2,3,4,5); none are less than the first, so 'if' branch is not taken.
+	 */
+	@Test
+	void testGetLeftMostPosEast() {
+		frigate = new Frigate(Compass.EAST, new Position(3, 2));
+		assertEquals(2, frigate.getLeftMostPos(), "Error: The leftmost position for EAST should be 2.");
+	}
+
+	/**
+	 * Test for the getRightMostPos method with NORTH bearing.
+	 * All positions share the same column; 'if col > right' branch is never taken.
 	 * Cyclomatic Complexity: 2
 	 */
 	@Test
 	void testGetRightMostPos() {
 		assertEquals(5, frigate.getRightMostPos(), "Error: The rightmost position should be 5.");
+	}
+
+	/**
+	 * Test for the getRightMostPos method with EAST bearing.
+	 * Columns increase (2,3,4,5); the 'if col > right' branch is taken for each subsequent position.
+	 */
+	@Test
+	void testGetRightMostPosEast() {
+		frigate = new Frigate(Compass.EAST, new Position(3, 2));
+		assertEquals(5, frigate.getRightMostPos(), "Error: The rightmost position for EAST should be 5.");
 	}
 
 	/**

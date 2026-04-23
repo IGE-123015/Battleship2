@@ -6,21 +6,25 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.*;
 
-public class Game implements IGame
-{
+public class Game implements IGame {
 	/**
 	 * Prints the game board by representing the positions of ships, adjacent tiles,
 	 * shots, and other game elements onto the console. The method also optionally
-	 * displays shot positions and a legend explaining the symbols used on the board.
+	 * displays shot positions and a legend explaining the symbols used on the
+	 * board.
 	 *
-	 * @param fleet       the fleet of ships to be displayed on the board. Ships are marked
-	 *                    and their positions are shown according to their placement.
-	 * @param moves       the list of moves containing shots. If shot positions are shown,
-	 *                    they will be rendered based on their outcome (hit, miss, etc.).
-	 * @param show_shots  if true, displays the shots taken during the game and marks
-	 *                    their result (hit or miss) on the board.
-	 * @param showLegend  if true, displays an explanatory legend of the symbols used
-	 *                    to represent various elements such as ships, misses, hits, etc.
+	 * @param fleet      the fleet of ships to be displayed on the board. Ships are
+	 *                   marked
+	 *                   and their positions are shown according to their placement.
+	 * @param moves      the list of moves containing shots. If shot positions are
+	 *                   shown,
+	 *                   they will be rendered based on their outcome (hit, miss,
+	 *                   etc.).
+	 * @param show_shots if true, displays the shots taken during the game and marks
+	 *                   their result (hit or miss) on the board.
+	 * @param showLegend if true, displays an explanatory legend of the symbols used
+	 *                   to represent various elements such as ships, misses, hits,
+	 *                   etc.
 	 */
 	public static void printBoard(IFleet fleet, List<IMove> moves, boolean show_shots, boolean showLegend) {
 
@@ -44,7 +48,7 @@ public class Game implements IGame
 		if (show_shots)
 			for (IMove move : moves)
 				for (IPosition shot : move.getShots()) {
-					if (shot.isInside()){
+					if (shot.isInside()) {
 						int row = shot.getRow();
 						int col = shot.getColumn();
 						if (map[row][col] == SHIP_MARKER)
@@ -83,21 +87,27 @@ public class Game implements IGame
 
 		if (showLegend) {
 			System.out.println("          LEGENDA");
-			System.out.println("'" + SHIP_MARKER + "'->navio, '" + SHIP_ADJACENT_MARKER + "'->adjacente a navio, '" + EMPTY_MARKER + "'->água");
+			System.out.println("'" + SHIP_MARKER + "'->navio, '" + SHIP_ADJACENT_MARKER + "'->adjacente a navio, '"
+					+ EMPTY_MARKER + "'->água");
 			System.out.println("'" + SHOT_SHIP_MARKER + "'->Tiro certeiro, '" + SHOT_WATER_MARKER + "'->Tiro na água");
 		}
 		System.out.println();
 	}
 
 	/**
-	 * Serializes a list of shot positions into a JSON string. Each shot is represented
-	 * with its classic row and column values. The method uses the Jackson library for
+	 * Serializes a list of shot positions into a JSON string. Each shot is
+	 * represented
+	 * with its classic row and column values. The method uses the Jackson library
+	 * for
 	 * JSON serialization.
 	 *
-	 * @param shots a list of shot positions to be serialized. Each position is represented
-	 *              by an implementation of the {@code IPosition} interface. The list must
+	 * @param shots a list of shot positions to be serialized. Each position is
+	 *              represented
+	 *              by an implementation of the {@code IPosition} interface. The
+	 *              list must
 	 *              not be null.
-	 * @return a formatted JSON string containing the shot positions. Each shot includes
+	 * @return a formatted JSON string containing the shot positions. Each shot
+	 *         includes
 	 *         its classic row and column.
 	 * @throws RuntimeException if an error occurs during JSON serialization.
 	 */
@@ -113,7 +123,8 @@ public class Game implements IGame
 		List<Map<String, Object>> simplifiedShots = new ArrayList<>();
 		for (IPosition shot : shots) {
 			Map<String, Object> simplePos = new LinkedHashMap<>();
-			// We use getClassicRow() and getClassicColumn() based on your current JSON output
+			// We use getClassicRow() and getClassicColumn() based on your current JSON
+			// output
 			simplePos.put("row", String.valueOf(shot.getClassicRow()));
 			simplePos.put("column", shot.getClassicColumn());
 			simplifiedShots.add(simplePos);
@@ -127,14 +138,14 @@ public class Game implements IGame
 			throw new RuntimeException("Erro ao serializar o JSON", e);
 		}
 
-//		System.out.println(jsonString);
-//		System.out.println();
+		// System.out.println(jsonString);
+		// System.out.println();
 
 		// Retornar o JSON
 		return jsonString;
 	}
 
-	//------------------------------------------------------------------
+	// ------------------------------------------------------------------
 	public static final int BOARD_SIZE = 10;
 	public static final int NUMBER_SHOTS = 3;
 
@@ -144,7 +155,7 @@ public class Game implements IGame
 	private static final char SHOT_WATER_MARKER = 'o';
 	private static final char SHIP_ADJACENT_MARKER = '-';
 
-	//------------------------------------------------------------------
+	// ------------------------------------------------------------------
 	private final IFleet myFleet;
 	private final List<IMove> alienMoves;
 
@@ -157,9 +168,8 @@ public class Game implements IGame
 	private Integer countSinks;
 	private int moveNumber;
 
-	//------------------------------------------------------------------
-	public Game(IFleet myFleet)
-	{
+	// ------------------------------------------------------------------
+	public Game(IFleet myFleet) {
 		this.moveNumber = 1;
 
 		this.alienMoves = new ArrayList<IMove>();
@@ -175,37 +185,39 @@ public class Game implements IGame
 	}
 
 	@Override
-	public IFleet getMyFleet()
-	{
+	public IFleet getMyFleet() {
 		return myFleet;
 	}
 
 	@Override
-	public List<IMove> getAlienMoves()
-	{
+	public List<IMove> getAlienMoves() {
 		return alienMoves;
 	}
 
 	@Override
-	public IFleet getAlienFleet()
-	{
+	public IFleet getAlienFleet() {
 		return myFleet;
 	}
 
 	@Override
-	public List<IMove> getMyMoves()
-	{
+	public List<IMove> getMyMoves() {
 		return myMoves;
 	}
 
 	/**
-	 * Simulates a random firing action by the enemy, generating a set of unique shot coordinates
-	 * and serializing them into a JSON string. The method ensures that the random shots are valid
-	 * and do not duplicate existing shots in the game or previous enemy moves. After generating
-	 * the shots, it applies the firing logic and serializes the result for further processing.
+	 * Simulates a random firing action by the enemy, generating a set of unique
+	 * shot coordinates
+	 * and serializing them into a JSON string. The method ensures that the random
+	 * shots are valid
+	 * and do not duplicate existing shots in the game or previous enemy moves.
+	 * After generating
+	 * the shots, it applies the firing logic and serializes the result for further
+	 * processing.
 	 *
-	 * @return A JSON string representing the list of randomly generated enemy shots.
-	 * @throws RuntimeException if there is an error during the JSON serialization of the shots.
+	 * @return A JSON string representing the list of randomly generated enemy
+	 *         shots.
+	 * @throws RuntimeException if there is an error during the JSON serialization
+	 *                          of the shots.
 	 */
 	public String randomEnemyFire() {
 
@@ -217,13 +229,13 @@ public class Game implements IGame
 			for (int c = 0; c < BOARD_SIZE; c++)
 				usablePositions.add(new Position(r, c));
 
-        for (IShip ship : this.myFleet.getSunkShips()) {
-            usablePositions.removeAll(new HashSet<>(ship.getAdjacentPositions()));
-        }
+		for (IShip ship : this.myFleet.getSunkShips()) {
+			usablePositions.removeAll(new HashSet<>(ship.getAdjacentPositions()));
+		}
 
-        for (IMove move : this.alienMoves) {
-            usablePositions.removeAll(new HashSet<>(move.getShots()));
-        }
+		for (IMove move : this.alienMoves) {
+			usablePositions.removeAll(new HashSet<>(move.getShots()));
+		}
 
 		List<IPosition> candidateShots = new ArrayList<>(usablePositions);
 
@@ -260,14 +272,15 @@ public class Game implements IGame
 		return Game.jsonShots(shots);
 	}
 
-
 	/**
 	 * Reads and processes the enemy fire input from the specified scanner.
 	 * The method expects input describing positions for enemy shots. It verifies
-	 * the format, ensures the correct number of positions are provided, and then fires
+	 * the format, ensures the correct number of positions are provided, and then
+	 * fires
 	 * on those positions.
 	 *
-	 * @param in the scanner object to read the enemy fire positions from, input must
+	 * @param in the scanner object to read the enemy fire positions from, input
+	 *           must
 	 *           be formatted either as a single token combining the column and row
 	 *           (e.g., "A3") or as separate tokens (e.g., "A" followed by "3").
 	 * @throws IllegalArgumentException if the provided positions are incomplete,
@@ -294,7 +307,8 @@ public class Game implements IGame
 					int row = inputScanner.nextInt();
 					shots.add(new Position(token.toUpperCase().charAt(0), row));
 				} else {
-					throw new IllegalArgumentException("Posição incompleta! A coluna '" + token + "' não é seguida por uma linha.");
+					throw new IllegalArgumentException(
+							"Posição incompleta! A coluna '" + token + "' não é seguida por uma linha.");
 				}
 			} else {
 				// Caso o token já contenha a coluna e a linha juntas (ex.: "A3")
@@ -314,18 +328,22 @@ public class Game implements IGame
 
 	/**
 	 * Fires a set of shots during a player's move. Each shot is resolved and
-	 * consolidated into a move, which is processed and added to the list of alien moves.
+	 * consolidated into a move, which is processed and added to the list of alien
+	 * moves.
 	 * The method ensures exactly {@code NUMBER_SHOTS} shots are fired, validates
-	 * each shot's position, and increments the move counter after completing the operation.
+	 * each shot's position, and increments the move counter after completing the
+	 * operation.
 	 *
 	 * @param shots a list of positions representing the locations to fire shots at.
-	 *              The positions should be unique and valid within the bounds of the game board.
+	 *              The positions should be unique and valid within the bounds of
+	 *              the game board.
 	 *              The size of the list must be equal to {@code NUMBER_SHOTS}.
-	 * @throws IllegalArgumentException if the list of shots is null, contains an invalid
-	 *                                  number of positions, or includes duplicate positions.
+	 * @throws IllegalArgumentException if the list of shots is null, contains an
+	 *                                  invalid
+	 *                                  number of positions, or includes duplicate
+	 *                                  positions.
 	 */
-	public void fireShots(List<IPosition> shots)
-	{
+	public void fireShots(List<IPosition> shots) {
 		assert shots != null;
 
 		List<ShotResult> shotResults = new ArrayList<ShotResult>();
@@ -341,7 +359,7 @@ public class Game implements IGame
 
 		Move move = new Move(moveNumber, shots, shotResults);
 
-//		System.out.println(move);
+		// System.out.println(move);
 
 		move.processEnemyFire(true);
 
@@ -351,13 +369,18 @@ public class Game implements IGame
 	}
 
 	/**
-	 * Fires a single shot at the specified position, handling scenarios such as invalid positions,
-	 * repeated shots, hits, misses, and sinking a ship. The method updates the necessary counters
+	 * Fires a single shot at the specified position, handling scenarios such as
+	 * invalid positions,
+	 * repeated shots, hits, misses, and sinking a ship. The method updates the
+	 * necessary counters
 	 * for invalid shots, repeated shots, hits, and sunk ships.
 	 *
-	 * @param pos the position to fire the shot at; must be valid and within the game board boundaries.
-	 * @param isRepeated true if the shot is marked as a repeat attempt, false otherwise.
-	 * @return a ShotResult object containing the result of the shot, including whether the shot was
+	 * @param pos        the position to fire the shot at; must be valid and within
+	 *                   the game board boundaries.
+	 * @param isRepeated true if the shot is marked as a repeat attempt, false
+	 *                   otherwise.
+	 * @return a ShotResult object containing the result of the shot, including
+	 *         whether the shot was
 	 *         valid, repeated, a hit, and whether a ship was sunk.
 	 */
 	public ShotResult fireSingleShot(IPosition pos, boolean isRepeated) {
@@ -377,8 +400,7 @@ public class Game implements IGame
 		IShip ship = myFleet.shipAt(pos);
 		if (ship == null)
 			return new ShotResult(true, false, null, false);
-		else
-		{
+		else {
 			ship.shoot(pos);
 			countHits++;
 			if (!ship.stillFloating()) {
@@ -389,38 +411,32 @@ public class Game implements IGame
 	}
 
 	@Override
-	public int getRepeatedShots()
-	{
+	public int getRepeatedShots() {
 		return this.countRepeatedShots;
 	}
 
 	@Override
-	public int getInvalidShots()
-	{
+	public int getInvalidShots() {
 		return this.countInvalidShots;
 	}
 
 	@Override
-	public int getHits()
-	{
+	public int getHits() {
 		return this.countHits;
 	}
 
 	@Override
-	public int getSunkShips()
-	{
+	public int getSunkShips() {
 		return this.countSinks;
 	}
 
 	@Override
-	public int getRemainingShips()
-	{
+	public int getRemainingShips() {
 		List<IShip> floatingShips = myFleet.getFloatingShips();
 		return floatingShips.size();
 	}
 
-	public boolean repeatedShot(IPosition pos)
-	{
+	public boolean repeatedShot(IPosition pos) {
 		assert pos != null;
 
 		for (IMove move : alienMoves)
@@ -429,24 +445,22 @@ public class Game implements IGame
 		return false;
 	}
 
-	public void printMyBoard(boolean show_shots, boolean show_legend)
-	{
+	public void printMyBoard(boolean show_shots, boolean show_legend) {
 		Game.printBoard(this.myFleet, this.alienMoves, show_shots, show_legend);
 	}
 
-	public void printAlienBoard(boolean show_shots, boolean show_legend)
-	{
+	public void printAlienBoard(boolean show_shots, boolean show_legend) {
 		Game.printBoard(this.alienFleet, this.myMoves, show_shots, show_legend);
 	}
 
-    public void over() {
-        System.out.println();
-        System.out.println("+--------------------------------------------------------------+");
-        System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
-        System.out.println("+--------------------------------------------------------------+");
+	public void over() {
+		System.out.println();
+		System.out.println("+--------------------------------------------------------------+");
+		System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
+		System.out.println("+--------------------------------------------------------------+");
 
-        // Gravar as estatísticas do jogo atual e imprimir a tabela
-        Scoreboard.saveScore(this.moveNumber, this.countHits, this.countSinks);
-        Scoreboard.printScoreboard();
-    }
+		// Gravar as estatísticas do jogo atual e imprimir a tabela
+		Scoreboard.saveScore(this.moveNumber, this.countHits, this.countSinks);
+		Scoreboard.printScoreboard();
+	}
 }
