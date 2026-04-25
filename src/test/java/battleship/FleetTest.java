@@ -20,6 +20,13 @@ import java.util.ArrayList;
  * - shipAt: 2
  * - isInsideBoard: 3
  * - colisionRisk: 2
+ * - getSunkShips: 2
+ * - createRandom: 1
+ * - printShips: 2
+ * - printAllShips: 1
+ * - printFloatingShips: 1
+ * - printShipsByCategory: 1
+ * - getShipsLike (no match): 2
  */
 	public class FleetTest {
 
@@ -194,5 +201,140 @@ import java.util.ArrayList;
 			IShip ship = new Barge(Compass.NORTH, new Position(1, 1));
 			fleet.addShip(ship);
 			assertDoesNotThrow(fleet::printStatus, "Error: printStatus should not throw any exceptions.");
+		}
+
+		// ------------------------------------------------------------------
+		// getSunkShips – CC: 2 (stillFloating true/false)
+		// ------------------------------------------------------------------
+
+		@Test
+		@DisplayName("getSunkShips – empty fleet returns empty list")
+		void testGetSunkShips_empty() {
+			assertTrue(fleet.getSunkShips().isEmpty(),
+					"Error: getSunkShips on an empty fleet should return an empty list.");
+		}
+
+		@Test
+		@DisplayName("getSunkShips – returns only ships with all positions hit")
+		void testGetSunkShips_afterSinking() {
+			IShip barge = new Barge(Compass.NORTH, new Position(1, 1));
+			IShip caravel = new Caravel(Compass.EAST, new Position(4, 4));
+			fleet.addShip(barge);
+			fleet.addShip(caravel);
+
+			// Initially nothing is sunk
+			assertEquals(0, fleet.getSunkShips().size(),
+					"Error: No ships should be sunk initially.");
+
+			// Sink the barge (single cell)
+			barge.getPositions().get(0).shoot();
+			List<IShip> sunk = fleet.getSunkShips();
+			assertEquals(1, sunk.size(), "Error: Exactly one ship should be sunk after shooting the barge.");
+			assertEquals(barge, sunk.get(0), "Error: The sunk ship should be the barge.");
+
+			// The caravel is still floating
+			assertEquals(1, fleet.getFloatingShips().size(),
+					"Error: The caravel should still be floating.");
+		}
+
+		// ------------------------------------------------------------------
+		// getShipsLike – branch: no ship matches the category (returns empty)
+		// ------------------------------------------------------------------
+
+		@Test
+		@DisplayName("getShipsLike – returns empty list when no ship matches the category")
+		void testGetShipsLike_noMatch() {
+			fleet.addShip(new Barge(Compass.NORTH, new Position(1, 1)));
+			List<IShip> galleons = fleet.getShipsLike("Galeao");
+			assertNotNull(galleons, "Error: getShipsLike should never return null.");
+			assertTrue(galleons.isEmpty(),
+					"Error: getShipsLike('Galeao') should return empty list when no galleons are present.");
+		}
+
+		// ------------------------------------------------------------------
+		// createRandom – CC: 1 (static factory, always builds a full fleet)
+		// ------------------------------------------------------------------
+
+		@Test
+		@DisplayName("createRandom – produces a valid fleet with exactly FLEET_SIZE ships, all inside the board")
+		void testCreateRandom() {
+			IFleet random = Fleet.createRandom();
+			assertNotNull(random, "Error: createRandom() should not return null.");
+			assertEquals(Fleet.FLEET_SIZE, random.getShips().size(),
+					"Error: Random fleet should contain exactly FLEET_SIZE ships.");
+
+			// Every ship must be afloat (no pre-existing hits)
+			assertEquals(Fleet.FLEET_SIZE, random.getFloatingShips().size(),
+					"Error: All ships in a new random fleet should be floating.");
+
+			// No sunk ships
+			assertTrue(random.getSunkShips().isEmpty(),
+					"Error: A brand-new fleet should have no sunk ships.");
+		}
+
+		// ------------------------------------------------------------------
+		// printShips – CC: 2 (0 ships / ≥1 ships)
+		// ------------------------------------------------------------------
+
+		@Test
+		@DisplayName("printShips – does not throw with an empty list (loop has 0 iterations)")
+		void testPrintShips_empty() {
+			assertDoesNotThrow(() -> fleet.printShips(new ArrayList<>()),
+					"Error: printShips with an empty list should not throw.");
+		}
+
+		@Test
+		@DisplayName("printShips – does not throw with a non-empty list (loop body executed)")
+		void testPrintShips_nonEmpty() {
+			List<IShip> ships = new ArrayList<>();
+			ships.add(new Barge(Compass.NORTH, new Position(1, 1)));
+			ships.add(new Caravel(Compass.EAST, new Position(4, 4)));
+			assertDoesNotThrow(() -> fleet.printShips(ships),
+					"Error: printShips with ships should not throw.");
+		}
+
+		// ------------------------------------------------------------------
+		// printAllShips – CC: 1 (delegates to printShips)
+		// ------------------------------------------------------------------
+
+		@Test
+		@DisplayName("printAllShips – does not throw; prints all ships in the fleet")
+		void testPrintAllShips() {
+			fleet.addShip(new Barge(Compass.NORTH, new Position(1, 1)));
+			fleet.addShip(new Barge(Compass.NORTH, new Position(5, 5)));
+			assertDoesNotThrow(fleet::printAllShips,
+					"Error: printAllShips should not throw.");
+		}
+
+		// ------------------------------------------------------------------
+		// printFloatingShips – CC: 1
+		// ------------------------------------------------------------------
+
+		@Test
+		@DisplayName("printFloatingShips – does not throw; only floating ships printed")
+		void testPrintFloatingShips() {
+			IShip barge = new Barge(Compass.NORTH, new Position(1, 1));
+			fleet.addShip(barge);
+			barge.getPositions().get(0).shoot(); // sink it
+			fleet.addShip(new Caravel(Compass.EAST, new Position(4, 4))); // still floating
+
+			assertDoesNotThrow(fleet::printFloatingShips,
+					"Error: printFloatingShips should not throw.");
+		}
+
+		// ------------------------------------------------------------------
+		// printShipsByCategory – CC: 1 (delegates to printShips(getShipsLike))
+		// ------------------------------------------------------------------
+
+		@Test
+		@DisplayName("printShipsByCategory – does not throw for a present or absent category")
+		void testPrintShipsByCategory() {
+			fleet.addShip(new Barge(Compass.NORTH, new Position(1, 1)));
+			fleet.addShip(new Caravel(Compass.EAST, new Position(4, 4)));
+
+			assertDoesNotThrow(() -> fleet.printShipsByCategory("Barca"),
+					"Error: printShipsByCategory('Barca') should not throw.");
+			assertDoesNotThrow(() -> fleet.printShipsByCategory("Galeao"),
+					"Error: printShipsByCategory('Galeao') with no match should not throw.");
 		}
 	}
