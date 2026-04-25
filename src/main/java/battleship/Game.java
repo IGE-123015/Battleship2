@@ -220,20 +220,7 @@ public class Game implements IGame
 		// Criar uma instância de Random com uma seed baseada no timestamp atual
 		Random random = new Random(System.currentTimeMillis());
 
-		Set<IPosition> usablePositions = new HashSet<IPosition>();
-		for (int r = 0; r < BOARD_SIZE; r++)
-			for (int c = 0; c < BOARD_SIZE; c++)
-				usablePositions.add(new Position(r, c));
-
-        for (IShip ship : this.myFleet.getSunkShips()) {
-            usablePositions.removeAll(new HashSet<>(ship.getAdjacentPositions()));
-        }
-
-        for (IMove move : this.alienMoves) {
-            usablePositions.removeAll(new HashSet<>(move.getShots()));
-        }
-
-		List<IPosition> candidateShots = new ArrayList<>(usablePositions);
+		List<IPosition> candidateShots = buildCandidatePositions();
 
 		// Criar lista para armazenar os tiros
 		List<IPosition> shots = new ArrayList<IPosition>();
@@ -426,6 +413,30 @@ public class Game implements IGame
 	{
 		List<IShip> floatingShips = myFleet.getFloatingShips();
 		return floatingShips.size();
+	}
+
+	/**
+	 * Builds the list of candidate positions for a random enemy shot.
+	 * All board positions are included, minus adjacents of already-sunk ships
+	 * and positions already shot in previous moves.
+	 *
+	 * @return a list of positions that are valid targets for the next enemy shot.
+	 */
+	private List<IPosition> buildCandidatePositions() {
+		Set<IPosition> usablePositions = new HashSet<IPosition>();
+		for (int r = 0; r < BOARD_SIZE; r++)
+			for (int c = 0; c < BOARD_SIZE; c++)
+				usablePositions.add(new Position(r, c));
+
+		for (IShip ship : this.myFleet.getSunkShips()) {
+			usablePositions.removeAll(new HashSet<>(ship.getAdjacentPositions()));
+		}
+
+		for (IMove move : this.alienMoves) {
+			usablePositions.removeAll(new HashSet<>(move.getShots()));
+		}
+
+		return new ArrayList<>(usablePositions);
 	}
 
 	public boolean repeatedShot(IPosition pos)
