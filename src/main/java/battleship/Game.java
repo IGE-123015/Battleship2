@@ -54,6 +54,16 @@ public class Game implements IGame
 					}
 				}
 
+		printGrid(map, showLegend);
+	}
+
+	/**
+	 * Renders the game grid, column header, row borders, cell values, and optional legend.
+	 *
+	 * @param map         the 2-D array of cell characters to display.
+	 * @param showLegend  if true, prints the symbol legend below the grid.
+	 */
+	private static void printGrid(char[][] map, boolean showLegend) {
 		System.out.println();
 		System.out.print("    ");
 		for (int col = 0; col < BOARD_SIZE; col++) {
