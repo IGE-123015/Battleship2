@@ -10,6 +10,12 @@ import java.util.List;
 
 public class PdfReport {
 
+    private static final float FONT_SIZE    = 12;
+    private static final float LINE_LEADING = 16;
+    private static final float MARGIN_X     = 50;
+    private static final float MARGIN_Y     = 750;
+    private static final String REPORT_TITLE = "Relatório de Jogadas - Battleship";
+
     public static void exportMovesToPDF(List<IMove> moves, String filename) {
 
         try (PDDocument document = new PDDocument()) {
@@ -20,10 +26,11 @@ public class PdfReport {
             PDPageContentStream content = new PDPageContentStream(document, page);
 
             content.beginText();
-            content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);            content.setLeading(16);
-            content.newLineAtOffset(50, 750);
+            content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), FONT_SIZE);
+            content.setLeading(LINE_LEADING);
+            content.newLineAtOffset(MARGIN_X, MARGIN_Y);
 
-            content.showText("Relatório de Jogadas - Battleship");
+            content.showText(REPORT_TITLE);
             content.newLine();
 
             for (IMove move : moves) {
