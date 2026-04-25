@@ -88,4 +88,23 @@ public class CompassTest {
 	void charToCompass3() {
 		assertNull(Compass.charToCompass('\0'), "Error: Null character should map to null.");
 	}
+
+	// ------------------------------------------------------------------
+	// randomBearing – CC: 1 (always returns one of the 4 valid directions)
+	// ------------------------------------------------------------------
+
+	@Test
+	@DisplayName("randomBearing – always returns a valid, non-null Compass value (50 samples)")
+	void randomBearing() {
+		Compass[] valid = Compass.values();
+		for (int i = 0; i < 50; i++) {
+			Compass b = Compass.randomBearing();
+			assertNotNull(b, "Error: randomBearing() must not return null.");
+			boolean found = false;
+			for (Compass v : valid)
+				if (v == b) { found = true; break; }
+			assertTrue(found, "Error: randomBearing() returned an unexpected value: " + b);
+		}
+	}
+}
 }
