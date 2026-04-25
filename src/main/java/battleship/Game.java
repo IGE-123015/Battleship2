@@ -68,9 +68,7 @@ public class Game implements IGame
 		System.out.println("+");
 
 		for (int row = 0; row < BOARD_SIZE; row++) {
-			Position pos = new Position(row, 0);
-			char rowLabel = pos.getClassicRow();
-			System.out.print(" " + rowLabel + " |");
+			System.out.print(" " + new Position(row, 0).getClassicRow() + " |");
 			for (int col = 0; col < BOARD_SIZE; col++)
 				System.out.print(" " + map[row][col]);
 			System.out.println(" |");
