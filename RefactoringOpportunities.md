@@ -9,3 +9,8 @@
 | `Move::processEnemyFire` | Long Method | Extract Method | 94334 |
 | `Fleet::colisionRisk` | Duplicated Code | Replace Loop with Enhanced For | 94334 |
 | `Tasks::menu` | Long Method / Switch Statements | Introduce Constant | 94334 |
+| `Position::adjacentPositions` | Magic Array / Duplicated Initialization | Extract Constant | 112949 |
+| `Ship::tooCloseTo(IShip)` | Verbose Iterator Loop | Replace Loop with Enhanced For | 112949 |
+| `Move::processEnemyFire` | Long Method | Extract Method (buildJsonResponse) | 112949 |
+| `Fleet::addShip` | Unnecessary Local Variable | Inline Variable | 112949 |
+| `Position::equals` | Verbose instanceof + cast | Replace with Pattern Matching for instanceof | 112949 |

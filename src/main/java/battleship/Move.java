@@ -168,6 +168,23 @@ public class Move implements IMove {
 			System.out.println("Jogada nº" + this.number + " -> " + output);
 		}
 
+		return buildJsonResponse(validShots, repeatedShots, missedShots, outsideShots, sunkBoatsCount, hitsPerBoat);
+	}
+
+	/**
+	 * Builds the JSON response string summarizing the move results.
+	 * Extracted from processEnemyFire to reduce method length (Long Method smell).
+	 *
+	 * @param validShots     number of valid shots
+	 * @param repeatedShots  number of repeated shots
+	 * @param missedShots    number of shots that hit water
+	 * @param outsideShots   number of shots outside the board
+	 * @param sunkBoatsCount map of boat category to number of boats sunk
+	 * @param hitsPerBoat    map of boat category to number of hits
+	 * @return a JSON-formatted string encapsulating the move results
+	 */
+	private String buildJsonResponse(int validShots, int repeatedShots, int missedShots, int outsideShots,
+									 Map<String, Integer> sunkBoatsCount, Map<String, Integer> hitsPerBoat) {
 		// Criar o mapa para o JSON
 		Map<String, Object> response = new HashMap<>();
 		response.put("validShots", validShots);
@@ -197,20 +214,14 @@ public class Move implements IMove {
 		}
 		response.put("hitsOnBoats", boatHits);
 
-		// Serializar o JSON utilizando Jackson
-		String jsonString;
-
 		// Serializar os tiros gerados em JSON usando a biblioteca Jackson
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
 		try {
-			jsonString = objectMapper.writeValueAsString(response);
+			return objectMapper.writeValueAsString(response);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("Erro ao serializar o JSON dos resultados da jogada", e);
 		}
-
-		// Retornar o JSON
-		return jsonString;
 	}
 }
