@@ -16,6 +16,6 @@
 | `Position::equals` | Verbose instanceof + cast | Replace with Pattern Matching for instanceof | 112949 |
 | `Timer::getTimeMillis` | Expression too complex | Introduce Variable | 123015 |
 | `Position::isNeighbor` | Long Method | Extract Method | 123015 |
-| `Ship` (variáveis de instância) | Public Field | Encapsulate Field | 123015 |
-| `Barge` (construtor) | Duplicate Code | Pull Up Method | 123015 |
+| `Ship`| Public Field | Encapsulate Field | 123015 |
+| `Barge`| Duplicate Code | Pull Up Method | 123015 |
 | `Carrack` | Unused Declaration | Safe Delete | 123015 |
