@@ -666,7 +666,7 @@ class FleetTest {
     void testColisionRisk1() throws Exception {
         assertAll("colisionRisk should detect collisions",
                 () -> {
-                    Method method = Fleet.class.getDeclaredMethod("colisionRisk", IShip.class);
+                    Method method = Fleet.class.getDeclaredMethod("collisionRisk", IShip.class);
                     method.setAccessible(true);
 
                     IShip ship1 = new Barge(Compass.NORTH, new Position(1, 1));
@@ -687,7 +687,7 @@ class FleetTest {
     void testColisionRisk2() throws Exception {
         assertAll("colisionRisk should return false for empty fleet",
                 () -> {
-                    Method method = Fleet.class.getDeclaredMethod("colisionRisk", IShip.class);
+                    Method method = Fleet.class.getDeclaredMethod("collisionRisk", IShip.class);
                     method.setAccessible(true);
 
                     IShip ship = new Barge(Compass.NORTH, new Position(5, 5));
@@ -705,7 +705,7 @@ class FleetTest {
     void testColisionRisk3() throws Exception {
         assertAll("colisionRisk should check all ships in fleet",
                 () -> {
-                    Method method = Fleet.class.getDeclaredMethod("colisionRisk", IShip.class);
+                    Method method = Fleet.class.getDeclaredMethod("collisionRisk", IShip.class);
                     method.setAccessible(true);
 
                     IShip ship1 = new Barge(Compass.NORTH, new Position(0, 0));
@@ -1131,7 +1131,7 @@ class FleetTest {
     void testColisionRiskEarlyTermination() throws Exception {
         assertAll("colisionRisk should return true immediately on first collision found",
                 () -> {
-                    Method method = Fleet.class.getDeclaredMethod("colisionRisk", IShip.class);
+                    Method method = Fleet.class.getDeclaredMethod("collisionRisk", IShip.class);
                     method.setAccessible(true);
 
                     // Add multiple ships
@@ -1159,7 +1159,7 @@ class FleetTest {
     void testColisionRiskLoopCompletion() throws Exception {
         assertAll("colisionRisk should return false after checking all ships",
                 () -> {
-                    Method method = Fleet.class.getDeclaredMethod("colisionRisk", IShip.class);
+                    Method method = Fleet.class.getDeclaredMethod("collisionRisk", IShip.class);
                     method.setAccessible(true);
 
                     // Add multiple non-overlapping ships
@@ -1525,7 +1525,7 @@ class FleetTest {
      */
     @Test
     void colisionRiskReturnTrue() throws Exception {
-        Method method = Fleet.class.getDeclaredMethod("colisionRisk", IShip.class);
+        Method method = Fleet.class.getDeclaredMethod("collisionRisk", IShip.class);
         method.setAccessible(true);
 
         assertAll("colisionRisk should return true when collision found",
@@ -1547,7 +1547,7 @@ class FleetTest {
      */
     @Test
     void colisionRiskReturnFalse() throws Exception {
-        Method method = Fleet.class.getDeclaredMethod("colisionRisk", IShip.class);
+        Method method = Fleet.class.getDeclaredMethod("collisionRisk", IShip.class);
         method.setAccessible(true);
 
         assertAll("colisionRisk should return false when no collision",
