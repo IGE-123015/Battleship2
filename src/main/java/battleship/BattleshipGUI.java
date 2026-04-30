@@ -60,7 +60,7 @@ public class BattleshipGUI extends Application {
 
         grid.getChildren().clear();
 
-        // Add headers
+        // Add headers for
         for (int col = 0; col < Game.BOARD_SIZE; col++) {
             grid.add(new CenteredText(String.valueOf(col + 1)), col + 1, 0);
         }

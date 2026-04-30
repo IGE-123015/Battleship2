@@ -10,17 +10,17 @@ import java.util.*;
  * Shot
  *
  * @author Your Name
- *         Date: 20/02/2026
- *         Time: 19:39
+ * Date: 20/02/2026
+ * Time: 19:39
  */
 public class Move implements IMove {
 
-	// -------------------------------------------------------------------
+	//-------------------------------------------------------------------
 	private final int number;
 	private final List<IPosition> shots;
 	private final List<IGame.ShotResult> shotResults;
 
-	// -------------------------------------------------------------------
+	//-------------------------------------------------------------------
 	public Move(int moveNumber, List<IPosition> moveShots, List<IGame.ShotResult> moveResults) {
 		this.number = moveNumber;
 		this.shots = moveShots;
@@ -52,20 +52,79 @@ public class Move implements IMove {
 	}
 
 	/**
-	 * Processes the results of enemy fire on the game board, analyzing the outcomes
-	 * of shots,
-	 * such as valid shots, repeated shots, missed shots, hits on ships, and sunk
-	 * ships. It can
-	 * also display a detailed summary of the shot results if verbose mode is
-	 * activated.
+	 * Builds the verbose output message summarizing the shot results.
+	 * Extracted from processEnemyFire to reduce method length (Long Method smell).
 	 *
-	 * @param verbose a boolean indicating whether a detailed summary should be
-	 *                printed to the console
+	 * @param validShots    number of valid shots
+	 * @param repeatedShots number of repeated shots
+	 * @param missedShots   number of shots that missed (hit water)
+	 * @param outsideShots  number of shots outside the board
+	 * @param sunkBoatsCount map of boat category to number of boats sunk
+	 * @param hitsPerBoat    map of boat category to number of hits
+	 * @return the formatted output message string
+	 */
+	private String buildVerboseOutput(int validShots, int repeatedShots, int missedShots, int outsideShots,
+									  Map<String, Integer> sunkBoatsCount, Map<String, Integer> hitsPerBoat) {
+		StringBuilder output = new StringBuilder();
+
+		if (validShots == 0 && repeatedShots > 0) {
+			output.append(repeatedShots).append(" tiro").append(repeatedShots > 1 ? "s" : "").append(" repetido").append(repeatedShots > 1 ? "s" : "");
+		} else {
+			if (validShots > 0) {
+				output.append(validShots).append(" tiro").append(validShots > 1 ? "s" : "").append(" válido").append(validShots > 1 ? "s" : "").append(": ");
+			}
+
+			if (!sunkBoatsCount.isEmpty()) {
+				for (Map.Entry<String, Integer> entry : sunkBoatsCount.entrySet()) {
+					String boatName = entry.getKey();
+					int count = entry.getValue();
+					output.append(count).append(" ").append(boatName).append(count > 1 ? "s" : "").append(" ao fundo").append(" + ");
+				}
+			}
+
+			if (!hitsPerBoat.isEmpty()) {
+				for (Map.Entry<String, Integer> entry : hitsPerBoat.entrySet()) {
+					String boatName = entry.getKey();
+					int hits = entry.getValue();
+					if (!sunkBoatsCount.containsKey(boatName)) {
+						output.append(hits).append(" tiro").append(hits > 1 ? "s" : "").append(" num(a) ").append(boatName).append(" + ");
+					}
+				}
+			}
+
+			if (missedShots > 0) {
+				output.append(missedShots).append(" tiro").append(missedShots > 1 ? "s" : "").append(" na água");
+			} else if (!sunkBoatsCount.isEmpty() || !hitsPerBoat.isEmpty()) {
+				output.setLength(output.length() - 2); // Remover o "+" final
+			}
+
+			if (repeatedShots > 0) {
+				if (validShots > 0) {
+					output.append(", ");
+				}
+				output.append(repeatedShots).append(" tiro").append(repeatedShots > 1 ? "s" : "").append(" repetido").append(repeatedShots > 1 ? "s" : "");
+			}
+		}
+
+		if (outsideShots > 0) {
+			if (!output.isEmpty()) {
+				output.append(", ");
+			}
+			output.append(outsideShots).append(" tiro").append(outsideShots > 1 ? "s" : "").append(" exterior").append(outsideShots > 1 ? "es" : "");
+		}
+
+		return output.toString();
+	}
+
+	/**
+	 * Processes the results of enemy fire on the game board, analyzing the outcomes of shots,
+	 * such as valid shots, repeated shots, missed shots, hits on ships, and sunk ships. It can
+	 * also display a detailed summary of the shot results if verbose mode is activated.
+	 *
+	 * @param verbose a boolean indicating whether a detailed summary should be printed to the console
 	 *                for the processed enemy fire data.
-	 * @return a JSON-formatted string that encapsulates the results, including
-	 *         counts of valid shots,
-	 *         repeated shots, missed shots, shots outside the game board, and
-	 *         details of hits and
+	 * @return a JSON-formatted string that encapsulates the results, including counts of valid shots,
+	 *         repeated shots, missed shots, shots outside the game board, and details of hits and
 	 *         sunk ships.
 	 */
 	@Override
@@ -92,13 +151,11 @@ public class Move implements IMove {
 				validShots++;
 				if (result.ship() == null)
 					missedShots++; // Tiro na água
-				else {
+				else{
 					String boatName = result.ship().getCategory();
 					hitsPerBoat.put(boatName, hitsPerBoat.getOrDefault(boatName, 0) + 1);
 					if (result.sunk())
-						sunkBoatsCount.put(boatName, sunkBoatsCount.getOrDefault(boatName, 0) + 1); // Contar barcos do
-																									// mesmo tipo
-																									// afundados
+						sunkBoatsCount.put(boatName, sunkBoatsCount.getOrDefault(boatName, 0) + 1); // Contar barcos do mesmo tipo afundados
 				}
 			}
 		}
@@ -107,64 +164,7 @@ public class Move implements IMove {
 		int outsideShots = Game.NUMBER_SHOTS - validShots - repeatedShots;
 
 		if (verbose) {
-			// Construção da mensagem de saída
-			StringBuilder output = new StringBuilder();
-
-			if (validShots == 0 && repeatedShots > 0) {
-				output.append(repeatedShots).append(" tiro").append(repeatedShots > 1 ? "s" : "").append(" repetido")
-						.append(repeatedShots > 1 ? "s" : "");
-			} else {
-				if (validShots > 0) {
-					output.append(validShots).append(" tiro").append(validShots > 1 ? "s" : "").append(" válido")
-							.append(validShots > 1 ? "s" : "").append(": ");
-				}
-
-				// Atualizar lógica para contar múltiplos barcos afundados do mesmo tipo
-				if (!sunkBoatsCount.isEmpty()) {
-					for (Map.Entry<String, Integer> entry : sunkBoatsCount.entrySet()) {
-						String boatName = entry.getKey();
-						int count = entry.getValue();
-						output.append(count).append(" ").append(boatName).append(count > 1 ? "s" : "")
-								.append(" ao fundo").append(" + ");
-					}
-				}
-
-				if (!hitsPerBoat.isEmpty()) {
-					for (Map.Entry<String, Integer> entry : hitsPerBoat.entrySet()) {
-						String boatName = entry.getKey();
-						int hits = entry.getValue();
-						if (!sunkBoatsCount.containsKey(boatName)) {
-							output.append(hits).append(" tiro").append(hits > 1 ? "s" : "").append(" num(a) ")
-									.append(boatName).append(" + ");
-						}
-					}
-				}
-
-				if (missedShots > 0) {
-					output.append(missedShots).append(" tiro").append(missedShots > 1 ? "s" : "").append(" na água");
-				} else if (!sunkBoatsCount.isEmpty() || !hitsPerBoat.isEmpty()) {
-					output.setLength(output.length() - 2); // Remover o "+" final
-				}
-
-				if (repeatedShots > 0) {
-					if (validShots > 0) {
-						output.append(", ");
-					}
-					output.append(repeatedShots).append(" tiro").append(repeatedShots > 1 ? "s" : "")
-							.append(" repetido").append(repeatedShots > 1 ? "s" : "");
-				}
-			}
-
-			// Adicionar contagem de tiros fora do tabuleiro
-			if (outsideShots > 0) {
-				if (!output.isEmpty()) {
-					output.append(", ");
-				}
-				output.append(outsideShots).append(" tiro").append(outsideShots > 1 ? "s" : "").append(" exterior")
-						.append(outsideShots > 1 ? "es" : "");
-			}
-
-			// Imprimir na consola se verbose for true
+			String output = buildVerboseOutput(validShots, repeatedShots, missedShots, outsideShots, sunkBoatsCount, hitsPerBoat);
 			System.out.println("Jogada nº" + this.number + " -> " + output);
 		}
 
@@ -209,9 +209,6 @@ public class Move implements IMove {
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("Erro ao serializar o JSON dos resultados da jogada", e);
 		}
-
-		System.out.println(jsonString);
-		System.out.println();
 
 		// Retornar o JSON
 		return jsonString;

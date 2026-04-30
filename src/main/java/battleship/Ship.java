@@ -229,25 +229,39 @@ public abstract class Ship implements IShip
     }
 
 	/**
+	 * Finds the extreme value (min or max) of either row or column across all ship positions.
+	 * Extracted method to eliminate duplicated code in getTopMostPos, getBottomMostPos,
+	 * getLeftMostPos, and getRightMostPos.
+	 *
+	 * @param useRow  true to compare rows, false to compare columns
+	 * @param findMin true to find the minimum value, false to find the maximum
+	 * @return the extreme coordinate value
+	 */
+	private int getExtremeCoordinate(boolean useRow, boolean findMin)
+	{
+		int extreme = useRow ? getPositions().get(0).getRow() : getPositions().get(0).getColumn();
+		for (int i = 1; i < getSize(); i++) {
+			int current = useRow ? getPositions().get(i).getRow() : getPositions().get(i).getColumn();
+			if (findMin ? current < extreme : current > extreme)
+				extreme = current;
+		}
+		return extreme;
+	}
+
+	/**
 	 * Gets top most pos.
 	 *
 	 * @return the top most pos
 	 */
 	/*
      * (non-Javadoc)
-     * 
+     *
      * @see battleship.IShip#getTopMostPos()
      */
     @Override
     public int getTopMostPos()
     {
-	int top = getPositions().get(0).getRow();
-	for (int i = 1; i < getSize(); i++) {
-	    if (getPositions().get(i).getRow() < top) {
-		top = getPositions().get(i).getRow();
-	    }
-	}
-	return top;
+	return getExtremeCoordinate(true, true);
     }
 
 	/**
@@ -257,19 +271,13 @@ public abstract class Ship implements IShip
 	 */
 	/*
      * (non-Javadoc)
-     * 
+     *
      * @see battleship.IShip#getBottomMostPos()
      */
     @Override
     public int getBottomMostPos()
     {
-	int bottom = getPositions().get(0).getRow();
-	for (int i = 1; i < getSize(); i++) {
-	    if (getPositions().get(i).getRow() > bottom) {
-		bottom = getPositions().get(i).getRow();
-	    }
-	}
-	return bottom;
+	return getExtremeCoordinate(true, false);
     }
 
 	/**
@@ -279,19 +287,13 @@ public abstract class Ship implements IShip
 	 */
 	/*
      * (non-Javadoc)
-     * 
+     *
      * @see battleship.IShip#getLeftMostPos()
      */
     @Override
     public int getLeftMostPos()
     {
-	int left = getPositions().get(0).getColumn();
-	for (int i = 1; i < getSize(); i++) {
-	    if (getPositions().get(i).getColumn() < left) {
-		left = getPositions().get(i).getColumn();
-	    }
-	}
-	return left;
+	return getExtremeCoordinate(false, true);
     }
 
 	/**
@@ -301,19 +303,13 @@ public abstract class Ship implements IShip
 	 */
 	/*
      * (non-Javadoc)
-     * 
+     *
      * @see battleship.IShip#getRightMostPos()
      */
     @Override
     public int getRightMostPos()
     {
-	int right = getPositions().get(0).getColumn();
-	for (int i = 1; i < getSize(); i++) {
-	    if (getPositions().get(i).getColumn() > right) {
-		right = getPositions().get(i).getColumn();
-	    }
-	}
-	return right;
+	return getExtremeCoordinate(false, false);
     }
 
 	/**
