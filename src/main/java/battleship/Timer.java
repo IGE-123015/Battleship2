@@ -25,6 +25,7 @@ public class Timer {
     }
 
     public double getSeconds() {
-        return stopWatch.getTime() / 1000.0;
+        long timeMillis = stopWatch.getTime();
+        return timeMillis / 1000.0;
     }
 }
