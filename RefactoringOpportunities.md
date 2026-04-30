@@ -9,13 +9,9 @@
 | `Move::processEnemyFire` | Long Method | Extract Method | 94334 |
 | `Fleet::colisionRisk` | Duplicated Code | Replace Loop with Enhanced For | 94334 |
 | `Tasks::menu` | Long Method / Switch Statements | Introduce Constant | 94334 |
-| `Position::adjacentPositions` | Magic Array / Duplicated Initialization | Extract Constant | 112949 |
-| `Ship::tooCloseTo(IShip)` | Verbose Iterator Loop | Replace Loop with Enhanced For | 112949 |
-| `Move::processEnemyFire` | Long Method | Extract Method (buildJsonResponse) | 112949 |
-| `Fleet::addShip` | Unnecessary Local Variable | Inline Variable | 112949 |
-| `Position::equals` | Verbose instanceof + cast | Replace with Pattern Matching for instanceof | 112949 |
-| `Timer::getTimeMillis` | Expression too complex | Introduce Variable | 123015 |
-| `Position::isNeighbor` | Long Method | Extract Method | 123015 |
-| `Ship`| Public Field | Encapsulate Field | 123015 |
-| `Barge`| Duplicate Code | Pull Up Method | 123015 |
-| `Carrack` | Unused Declaration | Safe Delete | 123015 |
+| `PdfReport` | Magic Number / Magic Literal | Introduce Constant | 106806 |
+| `Game::printBoard` | Naming (parâmetro `show_shots` viola convenção camelCase) | Rename | 106806 |
+| `Game::printBoard` | Variável temporária usada uma única vez (`rowLabel`) | Inline Variable | 106806 |
+| `Game::fireSingleShot` | Expressão composta difícil de ler (`isRepeated \|\| repeatedShot(pos)`) | Introduce Variable | 106806 |
+| `Game::printBoard` | Long Method (método com >60 linhas) | Extract Method | 106806 |
+| `Game::randomEnemyFire` | Long Method (construção de candidatos misturada com lógica de disparo) | Extract Method | 106806 |
