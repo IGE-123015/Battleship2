@@ -15,3 +15,8 @@
 | `Game::fireSingleShot` | Expressão composta difícil de ler (`isRepeated \|\| repeatedShot(pos)`) | Introduce Variable | 106806 |
 | `Game::printBoard` | Long Method (método com >60 linhas) | Extract Method | 106806 |
 | `Game::randomEnemyFire` | Long Method (construção de candidatos misturada com lógica de disparo) | Extract Method | 106806 |
+| `Timer::getSeconds`| Expression too complex | Introduce Variable | 123015 |
+| `Ship` | Public Field | Encapsulate Field | 123015 |
+| `Game::fireSingleShot` | Unused Assignment | Inline Variable | 123015 |
+| `Fleet` | Dead Code | Remove Commented-Out Code | 123015 |
+| `Barge`| Duplicate Code | Pull Up Method | 123015 |
