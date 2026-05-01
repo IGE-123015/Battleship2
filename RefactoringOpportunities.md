@@ -19,7 +19,7 @@
 | `Ship` | Public Field | Encapsulate Field | 123015 |
 | `Game::fireSingleShot` | Unused Assignment | Inline Variable | 123015 |
 | `Fleet` | Dead Code | Remove Commented-Out Code | 123015 |
-| `Barge`| Duplicate Code | Pull Up Method | 123015 |
+| `Carrack`| Duplicate Code | Remove Duplicate Branches | 123015 |
 | `Position::adjacentPositions` | Magic Array / Duplicated Initialization | Extract Constant | 112949 |
 | `Ship::tooCloseTo(IShip)` | Verbose Iterator Loop | Replace Loop with Enhanced For | 112949 |
 | `Move::processEnemyFire` | Long Method | Extract Method (buildJsonResponse) | 112949 |
