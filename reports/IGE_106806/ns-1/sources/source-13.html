@@ -56,26 +56,26 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    85%
+    80%
   </span>
   <span class="absValue">
-    (17/20)
+    (16/20)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    61%
+    53,2%
   </span>
   <span class="absValue">
-    (47/77)
+    (41/77)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    80,8%
+    71,8%
   </span>
   <span class="absValue">
-    (63/78)
+    (56/78)
   </span>
 </td>
 </tr>
@@ -242,15 +242,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;	 */
 &nbsp;	public List&lt;IPosition&gt; getAdjacentPositions()
 &nbsp;	{
-<b class="fc">&nbsp;		List&lt;IPosition&gt; adjacentPositions = new ArrayList&lt;IPosition&gt;();</b>
-<b class="fc">&nbsp;		for (IPosition position : getPositions())</b>
+<b class="nc">&nbsp;		List&lt;IPosition&gt; adjacentPositions = new ArrayList&lt;IPosition&gt;();</b>
+<b class="nc">&nbsp;		for (IPosition position : getPositions())</b>
 &nbsp;		{
-<b class="fc">&nbsp;			List&lt;IPosition&gt; adjacents = position.adjacentPositions();</b>
-<b class="fc">&nbsp;			for (IPosition adj : adjacents)</b>
-<b class="pc">&nbsp;				if (!getPositions().contains(adj) &amp;&amp; !adjacentPositions.contains(adj))</b>
-<b class="fc">&nbsp;					adjacentPositions.add(adj);</b>
+<b class="nc">&nbsp;			List&lt;IPosition&gt; adjacents = position.adjacentPositions();</b>
+<b class="nc">&nbsp;			for (IPosition adj : adjacents)</b>
+<b class="nc">&nbsp;				if (!getPositions().contains(adj) &amp;&amp; !adjacentPositions.contains(adj))</b>
+<b class="nc">&nbsp;					adjacentPositions.add(adj);</b>
 &nbsp;		}
-<b class="fc">&nbsp;		return adjacentPositions;</b>
+<b class="nc">&nbsp;		return adjacentPositions;</b>
 &nbsp;	}
 &nbsp;
 &nbsp;	/**
@@ -550,7 +550,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-04-16 16:10</div>
+    <div style="float:right;">generated on 2026-04-26 00:17</div>
 </div>
 </body>
 </html>

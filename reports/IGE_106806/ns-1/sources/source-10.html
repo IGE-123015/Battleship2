@@ -67,7 +67,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     0%
   </span>
   <span class="absValue">
-    (0/10)
+    (0/4)
   </span>
 </td>
 <td class="coverageStat">
@@ -99,6 +99,12 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 <b class="nc">&nbsp;public class PdfReport {</b>
 &nbsp;
+&nbsp;    private static final float FONT_SIZE    = 12;
+&nbsp;    private static final float LINE_LEADING = 16;
+&nbsp;    private static final float MARGIN_X     = 50;
+&nbsp;    private static final float MARGIN_Y     = 750;
+&nbsp;    private static final String REPORT_TITLE = &quot;Relatório de Jogadas - Battleship&quot;;
+&nbsp;
 &nbsp;    public static void exportMovesToPDF(List&lt;IMove&gt; moves, String filename) {
 &nbsp;
 <b class="nc">&nbsp;        try (PDDocument document = new PDDocument()) {</b>
@@ -109,10 +115,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc">&nbsp;            PDPageContentStream content = new PDPageContentStream(document, page);</b>
 &nbsp;
 <b class="nc">&nbsp;            content.beginText();</b>
-<b class="nc">&nbsp;            content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);            content.setLeading(16);</b>
-<b class="nc">&nbsp;            content.newLineAtOffset(50, 750);</b>
+<b class="nc">&nbsp;            content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), FONT_SIZE);</b>
+<b class="nc">&nbsp;            content.setLeading(LINE_LEADING);</b>
+<b class="nc">&nbsp;            content.newLineAtOffset(MARGIN_X, MARGIN_Y);</b>
 &nbsp;
-<b class="nc">&nbsp;            content.showText(&quot;Relatório de Jogadas - Battleship&quot;);</b>
+<b class="nc">&nbsp;            content.showText(REPORT_TITLE);</b>
 <b class="nc">&nbsp;            content.newLine();</b>
 &nbsp;
 <b class="nc">&nbsp;            for (IMove move : moves) {</b>
@@ -135,7 +142,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 <b class="nc">&nbsp;            System.out.println(&quot;PDF criado: &quot; + filename);</b>
 &nbsp;
-<b class="nc">&nbsp;        } catch (IOException e) {</b>
+&nbsp;        } catch (IOException e) {
 <b class="nc">&nbsp;            e.printStackTrace();</b>
 &nbsp;        }
 &nbsp;    }
@@ -163,7 +170,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2026-04-16 16:10</div>
+    <div style="float:right;">generated on 2026-04-26 00:17</div>
 </div>
 </body>
 </html>
